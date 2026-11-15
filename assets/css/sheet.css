@@ -124,3 +124,28 @@ body.embed .site-header { display: none; }
 body.embed .sheet-hero { padding-top: 16px; }
 body.embed .sheet-foot { position: static; }
 .part.is-focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 40%, transparent); }
+
+/* 실시간 현황 — 보기 전환 · 평가 초안 */
+.vtabs { display: flex; gap: 6px; margin: 4px 0 14px; }
+.vtabs button { font: inherit; font-weight: 700; font-size: .9rem; padding: 8px 18px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink-2); cursor: pointer; }
+.vtabs button.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+.ev-top { display: grid; gap: 12px; margin-bottom: 12px; }
+@media (min-width: 900px) { .ev-top { grid-template-columns: 2fr 1fr; } }
+.ev-sum { display: grid; gap: 12px; }
+@media (min-width: 640px) { .ev-sum { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
+.ev-sum .g-box, .ev-tips { margin: 0; }
+.ev-sum h3, .ev-tips h3 { margin: 0 0 4px; font-size: .95rem; color: var(--accent); }
+.ev-sum p { margin: 0 0 8px; }
+.ev-tips ul { margin: 0; padding-left: 18px; font-size: .88rem; color: var(--ink-2); }
+.ev-tips li { margin: 4px 0; }
+.ev-bar { display: flex; height: 26px; border-radius: 8px; overflow: hidden; margin-bottom: 6px; font-size: .75rem; font-weight: 700; }
+.ev-bar i { font-style: normal; display: grid; place-items: center; color: #fff; white-space: nowrap; min-width: 0; }
+.lv-상 { background: #2fb67a; } .lv-중 { background: #3aa0ff; } .lv-하 { background: #ff7a3d; }
+.ev-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 4px 0 6px; }
+.ev-note { margin: 0 0 12px; }
+table.ev-table td { white-space: normal; vertical-align: top; min-width: 150px; }
+.lv-sel { font: inherit; font-weight: 800; color: #fff; border: 0; border-radius: 8px; padding: 3px 8px; cursor: pointer; }
+.lv-sel option { color: var(--ink); background: #fff; }
+.ev-why { margin-top: 4px; font-size: .75rem; color: var(--muted); line-height: 1.45; }
+.ev-fb { width: 100%; min-width: 220px; font: inherit; font-size: .85rem; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 8px; resize: vertical; }
+.ev-fb:focus { outline: none; border-color: var(--accent); }
