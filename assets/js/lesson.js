@@ -32,7 +32,7 @@
         '<div class="ltitle"><p class="lmeta"><b>' + base.no + "차시</b> <span class=\"lchip\">" + esc(base.word) + "</span> " + PHASE[info.phase] + "</p>" +
           "<h1>" + esc(base.title) + "</h1><p class=\"ltopic\">" + esc(info.topic) + "</p></div>" +
         '<div class="lside"><div class="lgoal"><span>학습 문제</span>' + esc(info.goal) + "</div>" +
-          '<div class="lbtns"><button class="btn primary" id="open-cm">▶ 수업 모드</button><a class="btn ghost" href="' + liveHref() + '" target="_blank" rel="noopener">실시간 현황</a></div>' +
+          '<div class="lbtns"><button class="btn primary" id="open-cm">▶ 수업 모드</button></div>' +
           classBar() + "</div>" +
       "</section>" +
       '<div class="ltabs" role="tablist">' +
@@ -89,9 +89,7 @@
     return '<div class="ppt">' +
       '<div class="ppt-main"><div class="ppt-stage" id="stage"></div>' +
         '<div class="ppt-bar"><span class="ppt-count" id="count"></span>' +
-          '<span class="ppt-nav"><button class="btn ghost small" id="prev" aria-label="이전 장">◀</button><button class="btn ghost small" id="next" aria-label="다음 장">▶</button></span>' +
-          '<button class="btn ghost small" id="from-here">▶ 이 장부터 수업 모드</button>' +
-          '<a class="btn ghost small" href="files/' + base.no + '/ppt.pptx" download="무도키즈_' + base.no + '차시_' + esc(base.title).replace(/\s+/g, "") + '.pptx">PPT 내려받기 (.pptx)</a></div>' +
+          '<button class="btn ghost small" id="from-here">▶ 이 장부터 수업 모드</button></div>' +
         '<div class="ppt-note"><span>발표자 메모</span><p id="note"></p></div>' +
       "</div>" +
       '<div class="ppt-thumbs" id="thumbs">' + info.slides.map(function (s, i) {
@@ -101,8 +99,6 @@
 
   function bindPpt() {
     document.getElementById("thumbs").addEventListener("click", function (e) { var t = e.target.closest(".thumb"); if (t) go(Number(t.dataset.i)); });
-    document.getElementById("prev").onclick = function () { go(cur - 1); };
-    document.getElementById("next").onclick = function () { go(cur + 1); };
     document.getElementById("from-here").onclick = function () { openClass(cur); };
     document.addEventListener("keydown", function (e) {
       if (!document.getElementById("cm").hidden || /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
