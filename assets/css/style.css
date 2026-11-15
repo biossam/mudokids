@@ -205,3 +205,5 @@ a { color: inherit; }
   .lesson .acts { padding-left: 40px; padding-right: 20px; }
   .lesson .lesson-links { padding-left: 40px; }
 }
+.lesson-links { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; }
+.lesson-links a.sub { font-weight: 500; color: var(--muted); font-size: .85rem; }

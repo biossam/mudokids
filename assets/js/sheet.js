@@ -27,6 +27,21 @@
     document.getElementById("app").innerHTML = '<p class="status">' + esc(e.message) + "</p>";
   });
 
+  var EMBED = q.get("embed") === "1";
+  if (EMBED) document.body.classList.add("embed");
+
+  // 차시 화면 안에 넣었을 때: 높이를 알려 주고, #p번호 파트로 스크롤
+  function postHeight() {
+    if (EMBED && window.parent !== window) window.parent.postMessage({ mdkSheetHeight: document.documentElement.scrollHeight }, "*");
+  }
+  function jumpToPart() {
+    var m = location.hash.match(/^#p(\d+)$/);
+    var el = m && document.querySelector('.part[data-pi="' + m[1] + '"]');
+    if (el) { el.scrollIntoView({ block: "start" }); el.classList.add("is-focus"); }
+  }
+  window.addEventListener("hashchange", jumpToPart);
+  if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.documentElement);
+
   function start(data) {
     var no = Number(q.get("l")) || 1;
     lesson = data.lessons.filter(function (l) { return l.no === no; })[0] || data.lessons[0];
@@ -35,8 +50,9 @@
     if (room) { me.room = room; write(ME_KEY, me); }
     state = read(SHEET_KEY + lesson.no, { fields: {}, gt: {}, submitted: false });
     document.title = lesson.no + "차시 " + lesson.title + " 활동지 · 무.도.키즈";
-    renderPicker(data);
+    if (!EMBED) renderPicker(data);
     render();
+    jumpToPart(); postHeight();
   }
 
   function renderPicker(data) {

@@ -118,3 +118,9 @@ table.live { width: 100%; border-collapse: collapse; font-size: .875rem; }
 .by-q ul { margin: 0; padding: 0 16px 12px 34px; }
 .by-q li { margin: 4px 0; }
 .by-q li b { color: var(--muted); font-weight: 500; margin-right: 6px; }
+
+/* 활동지를 차시 화면 안에 넣었을 때 */
+body.embed .site-header { display: none; }
+body.embed .sheet-hero { padding-top: 16px; }
+body.embed .sheet-foot { position: static; }
+.part.is-focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 40%, transparent); }
