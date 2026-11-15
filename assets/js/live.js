@@ -68,7 +68,7 @@
   function poll() {
     clearTimeout(timer);
     M.call({ action: "dash", room: conn.room, teacher: conn.key, lesson: M.serverLesson(lesson.no) })
-      .then(function (r) { failCount = 0; data = r; paint(); timer = setTimeout(poll, 3000); })
+      .then(function (r) { failCount = 0; data = r; paint(); timer = setTimeout(poll, document.hidden ? 15000 : 5000); })
       .catch(function (e) {
         failCount++;
         var board = document.getElementById("board");
@@ -99,7 +99,7 @@
     var st = data.students || [];
     var done = st.filter(function (s) { return s.submitted; }).length;
     var active = st.filter(function (s) { return data.now - s.t < 120000; }).length;
-    document.getElementById("meta").innerHTML = "참여 코드 <b>" + esc(conn.room) + "</b> · 3초마다 새로 고침";
+    document.getElementById("meta").innerHTML = "참여 코드 <b>" + esc(conn.room) + "</b> · 5초마다 새로 고침";
     var html = '<div class="summary"><div><b>' + st.length + "</b><span>쓴 학생</span></div>" +
       "<div><b>" + active + "</b><span>지금 쓰는 중 (2분 안)</span></div>" +
       "<div><b>" + done + "</b><span>다 했어요 ✓</span></div></div>";
@@ -135,8 +135,8 @@
         // 모둠 칸은 모둠마다 한 번만 (모둠 없이 쓴 학생은 따로)
         var groups = data.groups || {}, rows = [];
         Object.keys(groups).forEach(function (g) {
-          var it = groups[g][f.key];
-          if (it && M.filled(it.v)) rows.push("<li><b>" + esc(g) + "모둠</b>" + esc(M.show(it.v)) + "</li>");
+          var gv = groupValue(groups[g], f);
+          if (gv && M.filled(gv.v)) rows.push("<li><b>" + esc(g) + "모둠</b>" + esc(M.show(gv.v)) + (gv.by ? ' <span class="small">(' + esc(gv.by) + " 마지막으로 씀)</span>" : "") + "</li>");
         });
         list.filter(function (s) { return !s.group; }).forEach(function (s) {
           rows.push("<li><b>" + esc(s.ban) + "-" + esc(s.no) + "</b>" + esc(M.show(s.fields[f.key])) + "</li>");
@@ -153,6 +153,22 @@
     bindBoard(board);
   }
 
+  // 모둠 칸 값: 고르는 칸은 선택지마다("칸|선택지") 저장되므로 다시 모음
+  function groupValue(g, f) {
+    if (!g) return null;
+    if (f.item.type === "chips") {
+      var on = [], by = "", t = 0;
+      Object.keys(g).forEach(function (k) {
+        if (k.indexOf(f.key + "|") !== 0) return;
+        if (g[k].v) on.push(k.slice(f.key.length + 1));
+        if (g[k].t > t) { t = g[k].t; by = g[k].by; }
+      });
+      if (!on.length && g[f.key]) return { v: g[f.key].v, by: g[f.key].by };
+      return { v: on, by: by };
+    }
+    return g[f.key] ? { v: g[f.key].v, by: g[f.key].by } : null;
+  }
+
   function bindBoard(board) {
     board.onclick = function (e) {
       var v = e.target.closest("[data-view]"), u = e.target.closest("[data-unlock]");
@@ -165,8 +181,12 @@
     var s = (data.students || []).filter(function (x) { return x.sid === sid; })[0]; if (!s) return;
     var html = "<h2>" + esc(s.ban) + "반 " + esc(s.no) + "번" + (s.group ? " · " + esc(s.group) + "모둠" : "") + "</h2>";
     lesson.parts.forEach(function (p, pi) {
-      html += "<h3>" + (pi + 1) + ". " + esc(p.title) + (p.who === "모둠" ? " (모둠)" : "") + "</h3><dl>" +
-        p.items.map(function (it) { return "<dt>" + esc(it.label) + "</dt><dd>" + (esc(M.show(s.fields["p" + pi + "." + it.id])) || "-") + "</dd>"; }).join("") + "</dl>";
+      var gg = p.who === "모둠" && s.group ? (data.groups || {})[s.group] : null;
+      html += "<h3>" + (pi + 1) + ". " + esc(p.title) + (p.who === "모둠" ? " (모둠이 함께 쓴 칸)" : "") + "</h3><dl>" +
+        p.items.map(function (it) {
+          var f = { key: "p" + pi + "." + it.id, item: it }, gv = gg ? groupValue(gg, f) : null;
+          return "<dt>" + esc(it.label) + (gv && gv.by ? " · " + esc(gv.by) + " 마지막으로 씀" : "") + "</dt><dd>" + (esc(M.show(gv ? gv.v : s.fields[f.key])) || "-") + "</dd>";
+        }).join("") + "</dl>";
     });
     html += '<p style="margin-top:18px"><button class="btn primary" id="close-answer">닫기</button></p>';
     var box = document.getElementById("answer"), card = document.getElementById("answer-card");

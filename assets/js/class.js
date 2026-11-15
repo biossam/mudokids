@@ -113,7 +113,8 @@
     };
     paintLessons();
     refreshTeacher();
-    clearInterval(timer); timer = setInterval(refreshTeacher, 5000);
+    var tick = 0;
+    clearInterval(timer); timer = setInterval(function () { tick++; if (!document.hidden || tick % 3 === 0) refreshTeacher(); }, 5000);
     window.addEventListener("pagehide", function () {
       var cc = M.myClass(); if (!cc || !navigator.sendBeacon) return;
       navigator.sendBeacon(M.server() + "/api/mdk", new Blob([JSON.stringify({ action: "away", room: cc.room, teacher: cc.teacher })], { type: "text/plain" }));
@@ -217,7 +218,10 @@
           } else document.getElementById("s-now").textContent = "연결이 잠시 끊겼어요. 다시 연결하는 중…";
         });
     };
-    poll(); clearInterval(timer); timer = setInterval(poll, 3000);
+    // 6초마다 확인, 다른 탭을 보고 있으면 18초마다 (무료 서버 부담 줄이기)
+    var tick = 0;
+    poll(); clearInterval(timer); timer = setInterval(function () { tick++; if (!document.hidden || tick % 3 === 0) poll(); }, 6000);
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) poll(); });
   }
 
   function showStudent(code, r) {

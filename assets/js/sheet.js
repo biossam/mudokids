@@ -48,7 +48,8 @@
     me = read(ME_KEY, {});
     var room = (q.get("room") || "").replace(/[^0-9A-Za-z]/g, "").toUpperCase().slice(0, 6);
     if (room) { me.room = room; write(ME_KEY, me); }
-    state = read(SHEET_KEY + lesson.no, { fields: {}, gt: {}, submitted: false });
+    state = read(SHEET_KEY + lesson.no, {});
+    state = { fields: state.fields || {}, gv: state.gv || {}, dirty: state.dirty || {}, by: state.by || {}, submitted: Boolean(state.submitted) };
     document.title = lesson.no + "차시 " + lesson.title + " 활동지 · 무.도.키즈";
     if (!EMBED) renderPicker(data);
     render();
@@ -80,7 +81,7 @@
         (liveOn() && !inClass() ? '<label class="me-room">참여 코드<input data-me="room" maxlength="6" autocapitalize="characters" autocomplete="off" value="' + esc(me.room || "") + '"></label>' : "") +
         '<label>반<input data-me="ban" maxlength="3" inputmode="numeric" value="' + esc(me.ban || "") + '"></label>' +
         '<label>번호<input data-me="no" maxlength="3" inputmode="numeric" value="' + esc(me.no || "") + '"></label>' +
-        '<label>모둠<input data-me="group" maxlength="4" value="' + esc(me.group || "") + '" placeholder="예: 1"></label>' +
+        '<label>모둠<input data-me="group" maxlength="2" inputmode="numeric" value="' + esc(me.group || "") + '" placeholder="숫자"></label>' +
         '<label class="me-name">이름<input data-me="name" maxlength="20" value="' + esc(me.name || "") + '" placeholder="그림 저장용"></label>' +
         (liveOn() ? '<span class="live-chip" id="chip">연결 안 됨</span>' : "") +
         (liveOn() ? '<p class="me-help">' + (inClass() ? "반·번호·모둠을 쓰면 쓰는 내용이 선생님 화면에 자동으로 저장돼요." : "교실 링크 참여 코드와 반·번호를 쓰면 쓰는 내용이 선생님 화면에 자동으로 저장돼요.") + " 이름은 이 기기에만 남아요.</p>" : "") +
@@ -97,7 +98,7 @@
       "</section>";
     bind(app);
     paintProgress();
-    if (liveOn()) { sync(false); clearInterval(pullTimer); pullTimer = setInterval(pullGroup, 6000); }
+    if (liveOn()) { sync(false); clearInterval(pullTimer); pullTimer = setInterval(pullGroup, 4000); visibleGroups = {}; watchGroups(); }
   }
 
   function partHtml(p, pi) {
@@ -105,7 +106,7 @@
     return '<section class="part' + (group ? " is-group" : "") + '" data-pi="' + pi + '">' +
       '<h2 class="part-title"><span class="part-no">' + (pi + 1) + "</span>" + esc(p.title) +
       '<span class="who' + (group ? " g" : "") + '">' + (group ? "모둠이 함께" : "혼자") + "</span></h2>" +
-      (group ? '<p class="part-help">모둠을 쓰면 같은 모둠 친구가 쓴 내용이 이 칸에 함께 보여요.</p>' : "") +
+      (group ? '<p class="part-help">모둠 번호를 쓰면 같은 모둠 친구와 이 칸을 함께 써요. 친구가 쓰고 있는 칸에는 ✏️ 표시가 떠요.</p>' : "") +
       '<div class="items">' + p.items.map(function (it) { return itemHtml(pi, it); }).join("") + "</div></section>";
   }
 
@@ -137,13 +138,53 @@
     return lesson.parts[pi] && lesson.parts[pi].who === "모둠";
   }
 
-  function setField(key, v) {
-    state.fields[key] = v;
-    state.gt[key] = Date.now();
-    write(SHEET_KEY + lesson.no, state);
-    paintProgress();
-    soon();
+  /* ── 모둠 칸 함께 쓰기 ──
+     모둠 칸은 '칸 이름(gk)'마다 서버 판(gv: 서버가 찍은 시각)을 기억하고, 바꾼 칸만(dirty) 마지막으로 본 판(base)과 함께 보냄.
+     그 사이 친구가 먼저 고쳤으면 서버가 덮어쓰지 않고 알려 주고(conflicts), 학생이 친구 글/둘 다/내 글을 고름.
+     고르는 칸(chips)은 선택지마다 따로(gk = "칸|선택지") 보내서 둘이 동시에 눌러도 둘 다 남음. */
+  function itemOf(key) {
+    var pi = Number(key.slice(1, key.indexOf("."))), id = key.slice(key.indexOf(".") + 1), p = lesson.parts[pi];
+    return p && p.items.filter(function (x) { return x.id === id; })[0];
   }
+  function baseKey(gk) { var i = gk.indexOf("|"); return i < 0 ? gk : gk.slice(0, i); }
+  function gkeysOf(key, oldV, newV) {
+    var it = itemOf(key);
+    if (it && it.type === "chips") {
+      var a = Array.isArray(oldV) ? oldV : [], b = Array.isArray(newV) ? newV : [];
+      return it.options.filter(function (o) { return (a.indexOf(o) >= 0) !== (b.indexOf(o) >= 0); }).map(function (o) { return key + "|" + o; });
+    }
+    return [key];
+  }
+  function allGkeys(key) {
+    var it = itemOf(key);
+    if (it && it.type === "chips") return (Array.isArray(state.fields[key]) ? state.fields[key] : []).map(function (o) { return key + "|" + o; });
+    return M.filled(state.fields[key]) ? [key] : [];
+  }
+  function gval(gk) {
+    var i = gk.indexOf("|"); if (i < 0) return state.fields[gk] == null ? "" : state.fields[gk];
+    var list = state.fields[gk.slice(0, i)]; return Array.isArray(list) && list.indexOf(gk.slice(i + 1)) >= 0;
+  }
+  function applyRemote(gk, v) {
+    var i = gk.indexOf("|"); if (i < 0) { state.fields[gk] = v == null ? "" : v; return gk; }
+    var k = gk.slice(0, i), o = gk.slice(i + 1), list = Array.isArray(state.fields[k]) ? state.fields[k].slice() : [], at = list.indexOf(o);
+    if (v && at < 0) list.push(o); if (!v && at >= 0) list.splice(at, 1);
+    state.fields[k] = list; return k;
+  }
+  function groupParts() { return lesson.parts.some(function (p) { return p.who === "모둠"; }); }
+  function focusedGroupKey() {
+    var el = document.activeElement; var k = el && el.dataset && el.dataset.field;
+    return k && isGroupKey(k) ? k : "";
+  }
+
+  function setField(key, v) {
+    var old = state.fields[key];
+    state.fields[key] = v;
+    if (isGroupKey(key) && (me.group || "").trim()) gkeysOf(key, old, v).forEach(function (gk) { if (!state.dirty[gk]) state.dirty[gk] = {}; });
+    save();
+    paintProgress();
+    soon(isGroupKey(key) ? 800 : 1500);
+  }
+  function save() { write(SHEET_KEY + lesson.no, state); }
 
   function bind(app) {
     app.addEventListener("input", function (e) {
@@ -152,9 +193,17 @@
       if (t.dataset.me) {
         var v = t.value;
         if (t.dataset.me === "room") { v = v.replace(/[^0-9A-Za-z]/g, "").toUpperCase(); t.value = v; }
+        if (t.dataset.me === "group") { v = v.replace(/\D/g, "").slice(0, 2); t.value = v; return; } // 모둠은 다 쓰고 나서(change) 바꿈
         me[t.dataset.me] = v.trim(); write(ME_KEY, me);
         if (t.dataset.me !== "name") soon(900);
       }
+    });
+    app.addEventListener("change", function (e) {
+      if (e.target.dataset.me === "group") changeGroup(e.target.value.replace(/\D/g, "").slice(0, 2));
+    });
+    app.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-cf]"); if (!b) return;
+      resolveConflict(b.closest("[data-cfk]").dataset.cfk, b.dataset.cf);
     });
     app.addEventListener("click", function (e) {
       var c = e.target.closest(".chip");
@@ -181,7 +230,7 @@
       if (e.target.id === "save-img") return saveImage();
       if (e.target.id === "clear") {
         if (!confirm("이 활동지에 쓴 내용을 이 기기에서 모두 지울까요?")) return;
-        state = { fields: {}, gt: {}, submitted: false }; write(SHEET_KEY + lesson.no, state); render();
+        state = { fields: {}, gv: {}, dirty: {}, by: {}, submitted: false }; save(); render();
       }
     });
   }
@@ -222,17 +271,29 @@
   function sync(submit) {
     var w = who();
     if (w.room.length !== 6 || !w.ban || !w.no) { chip(w.room.length === 6 ? "반·번호를 써요" : "참여 코드를 써요", false); return Promise.resolve(); }
-    var fields = {}, gfields = {};
-    Object.keys(state.fields).forEach(function (k) {
-      fields[k] = state.fields[k];
-      if (w.group && isGroupKey(k)) gfields[k] = { v: state.fields[k], t: state.gt[k] || 0 };
+    var fields = {}, gfields = {}, sent = {};
+    Object.keys(state.fields).forEach(function (k) { fields[k] = state.fields[k]; });
+    if (w.group) Object.keys(state.dirty).forEach(function (gk) {
+      if (conflicts[gk]) return; // 친구 글과 겹친 칸은 학생이 고를 때까지 보내지 않음
+      var v = gval(gk); sent[gk] = JSON.stringify(v);
+      gfields[gk] = { v: v, base: state.gv[gk] || 0 };
+      if (state.dirty[gk].force) gfields[gk].force = true;
     });
     chip("보내는 중…", true);
     var summary = submit ? M.fieldsOf(lesson).map(function (f) { return f.item.label + ": " + (M.show(state.fields[f.key]) || "-"); }).join("\n") : undefined;
     return M.call({ action: "save", room: w.room, lesson: M.serverLesson(lesson.no), student: { ban: w.ban, no: w.no, group: w.group },
-      dev: deviceId(), fields: fields, gfields: gfields, progress: M.progress(lesson, state.fields), submit: submit, summary: summary })
+      dev: deviceId(), fields: fields, gfields: gfields, typing: w.group ? focusedGroupKey() : undefined,
+      progress: M.progress(lesson, state.fields), submit: submit, summary: summary })
       .then(function (r) {
+        lastSync = Date.now();
+        Object.keys(r.accepted || {}).forEach(function (gk) {
+          state.gv[gk] = r.accepted[gk]; state.by[gk] = who().ban + "-" + who().no;
+          if (state.dirty[gk] && JSON.stringify(gval(gk)) === sent[gk]) delete state.dirty[gk];
+          else if (state.dirty[gk]) delete state.dirty[gk].force;
+        });
+        Object.keys(r.conflicts || {}).forEach(function (gk) { onConflict(gk, r.conflicts[gk]); });
         if (r.gfields) mergeGroup(r.gfields);
+        if (r.typing) showTyping(r.typing);
         state.submitted = Boolean(r.submitted); write(SHEET_KEY + lesson.no, state);
         chip(r.submitted ? "다 했어요 ✓" : "선생님과 연결됨 · 자동 저장 중", true);
         if (submit) flash("선생님께 보냈어요. 고치면 다시 자동으로 저장돼요.");
@@ -249,26 +310,112 @@
       });
   }
 
+  var lastSync = 0, pullTick = 0, conflicts = {};
   function pullGroup() {
     var w = who();
-    if (w.room.length !== 6 || !w.group || !lesson.parts.some(function (p) { return p.who === "모둠"; })) return;
-    M.call({ action: "group", room: w.room, lesson: M.serverLesson(lesson.no), group: w.group, student: { ban: w.ban, no: w.no } })
-      .then(function (r) { if (r.fields) mergeGroup(r.fields); }).catch(function () {});
+    if (w.room.length !== 6 || !w.group || !groupParts()) return;
+    pullTick++;
+    if (document.hidden && pullTick % 3) return;          // 다른 탭을 보고 있으면 덜 자주
+    if (Date.now() - lastSync < 2500) return;            // 방금 저장하며 받았으면 건너뜀
+    if (!groupInView() && !focusedGroupKey()) return;     // 모둠 활동이 화면에 없으면 받지 않음 (볼 때 바로 받음)
+    M.call({ action: "group", room: w.room, lesson: M.serverLesson(lesson.no), group: w.group, student: { ban: w.ban, no: w.no }, typing: focusedGroupKey() })
+      .then(function (r) { if (r.fields) mergeGroup(r.fields); showTyping(r.typing || {}); }).catch(function () {});
   }
 
-  // 같은 모둠 친구가 더 늦게 쓴 칸을 받아 넣음 (지금 쓰고 있는 칸은 건드리지 않음)
+  // 같은 모둠 친구가 고친 칸을 받아 넣음. 내가 고치고 아직 못 보낸 칸은 건드리지 않음(보낼 때 서버가 겹침을 알려 줌)
   function mergeGroup(g) {
-    var changed = false;
-    Object.keys(g).forEach(function (k) {
-      if (!isGroupKey(k)) return;
-      var item = g[k];
-      if (!item || (item.t || 0) <= (state.gt[k] || 0)) return;
+    var changed = false, repaint = {};
+    Object.keys(g).forEach(function (gk) {
+      if (!isGroupKey(baseKey(gk))) return;
+      var item = g[gk];
+      if (!item || (item.t || 0) <= (state.gv[gk] || 0) || state.dirty[gk] || conflicts[gk]) return;
+      state.gv[gk] = item.t; state.by[gk] = item.by;
+      if (JSON.stringify(gval(gk)) === JSON.stringify(gk.indexOf("|") < 0 ? (item.v == null ? "" : item.v) : Boolean(item.v))) return;
+      var k = applyRemote(gk, item.v); changed = true;
       var el = document.querySelector('[data-field="' + k + '"]');
-      if (el && document.activeElement === el) return;
-      state.fields[k] = item.v; state.gt[k] = item.t; changed = true;
-      if (el) el.value = item.v || ""; else repaintItem(k);
+      if (el) el.value = state.fields[k] || ""; else repaint[k] = true;
     });
-    if (changed) { write(SHEET_KEY + lesson.no, state); paintProgress(); }
+    Object.keys(repaint).forEach(repaintItem);
+    if (changed) { save(); paintProgress(); }
+  }
+
+  // 모둠 활동이 화면에 보이는지 (보일 때만 친구 글을 받아 서버 부담을 줄임)
+  var visibleGroups = {};
+  function groupInView() { return Object.keys(visibleGroups).some(function (k) { return visibleGroups[k]; }); }
+  function watchGroups() {
+    if (!window.IntersectionObserver) { visibleGroups.all = true; return; }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var was = groupInView(); visibleGroups[e.target.dataset.pi] = e.isIntersecting;
+        if (!was && groupInView()) { lastSync = 0; pullGroup(); }
+      });
+    });
+    document.querySelectorAll(".part.is-group").forEach(function (el) { io.observe(el); });
+  }
+
+  function showTyping(map) {
+    document.querySelectorAll(".typing-note").forEach(function (n) { n.remove(); });
+    Object.keys(map || {}).forEach(function (gk) {
+      var el = document.querySelector('[data-key="' + baseKey(gk) + '"]'); if (!el) return;
+      var n = document.createElement("span"); n.className = "typing-note"; n.textContent = "✏️ " + map[gk].replace("-", "반 ") + "번이 쓰는 중…";
+      el.appendChild(n);
+    });
+  }
+
+  function onConflict(gk, c) {
+    var local = gval(gk), remote = gk.indexOf("|") < 0 ? (c.v == null ? "" : c.v) : Boolean(c.v);
+    if (gk.indexOf("|") >= 0 || JSON.stringify(local) === JSON.stringify(remote) || !M.filled(local)) {
+      // 고르는 칸이나 같은 글, 내 칸이 비어 있으면 친구 것을 그대로 받음
+      state.gv[gk] = c.t; state.by[gk] = c.by; delete state.dirty[gk];
+      var k = applyRemote(gk, c.v); var el = document.querySelector('[data-field="' + k + '"]');
+      if (el) el.value = state.fields[k] || ""; else repaintItem(k);
+      save(); paintProgress(); return;
+    }
+    conflicts[gk] = c;
+    var box = document.querySelector('[data-key="' + gk + '"]'); if (!box) return;
+    var old = box.querySelector(".conflict"); if (old) old.remove();
+    var d = document.createElement("div"); d.className = "conflict"; d.dataset.cfk = gk;
+    d.innerHTML = "<b>" + esc(String(c.by || "").replace("-", "반 ")) + "번이 이 칸을 먼저 고쳤어요.</b>" +
+      '<p class="cf-text">“' + esc(remote) + '”</p>' +
+      '<div class="cf-btns"><button type="button" class="btn ghost small" data-cf="theirs">친구 글로</button>' +
+      '<button type="button" class="btn ghost small" data-cf="both">둘 다 남기기</button>' +
+      '<button type="button" class="btn ghost small" data-cf="mine">내 글로</button></div>';
+    box.appendChild(d);
+  }
+
+  function resolveConflict(gk, how) {
+    var c = conflicts[gk]; if (!c) return;
+    delete conflicts[gk];
+    var el = document.querySelector('[data-field="' + gk + '"]');
+    if (how === "theirs") { state.fields[gk] = c.v || ""; delete state.dirty[gk]; }
+    else if (how === "both") {
+      var it = itemOf(gk), sep = it && it.type === "line" ? " / " : "\n";  // 한 줄 칸은 줄바꿈을 못 담음
+      state.fields[gk] = String(c.v || "") + sep + String(state.fields[gk] || ""); state.dirty[gk] = {};
+    }
+    else { state.dirty[gk] = { force: true }; }
+    state.gv[gk] = c.t;
+    if (el) el.value = state.fields[gk] || "";
+    var box = document.querySelector('[data-cfk="' + gk + '"]'); if (box) box.remove();
+    save(); paintProgress(); soon(200);
+  }
+
+  // 모둠 번호를 바꾸면: 다른 모둠에서 쓴 모둠 칸은 이 화면에서 비우고 새 모둠 것을 받음. 처음 쓰는 거면 지금까지 쓴 걸 모둠에 올림
+  function changeGroup(g) {
+    var before = (me.group || "").trim();
+    me.group = g; write(ME_KEY, me);
+    if (g === before) return;
+    var groupKeys = M.fieldsOf(lesson).filter(function (f) { return f.part.who === "모둠"; }).map(function (f) { return f.key; });
+    if (before) {
+      groupKeys.forEach(function (k) { delete state.fields[k]; });
+      Object.keys(state.gv).concat(Object.keys(state.dirty), Object.keys(conflicts)).forEach(function (gk) {
+        if (groupKeys.indexOf(baseKey(gk)) >= 0) { delete state.gv[gk]; delete state.dirty[gk]; delete conflicts[gk]; delete state.by[gk]; }
+      });
+      groupKeys.forEach(repaintItem);
+      if (g) flash(g + "모둠 칸을 불러와요.");
+    } else if (g) {
+      groupKeys.forEach(function (k) { allGkeys(k).forEach(function (gk) { state.dirty[gk] = {}; }); });
+    }
+    save(); paintProgress(); soon(300);
   }
 
   /* 활동지 그림으로 저장 */
