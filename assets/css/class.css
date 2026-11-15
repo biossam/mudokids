@@ -1,0 +1,96 @@
+/* 무.도.키즈 간단 교실 */
+.class-tag { margin-left: auto; font-size: .85rem; color: var(--ink-2); background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; }
+.class-tag b { letter-spacing: .08em; color: var(--ink); }
+.c-h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.2rem, 5vw, 3rem); line-height: 1.15; margin: 0 0 10px; }
+.c-home { padding: 48px 16px 64px; }
+.c-choose { display: grid; gap: 16px; margin: 28px 0 20px; }
+@media (min-width: 760px) { .c-choose { grid-template-columns: 1fr 1fr; } }
+.c-card { background: var(--surface); border: 2px solid var(--ink); border-radius: 20px; box-shadow: 0 5px 0 var(--ink); padding: 24px 26px; }
+.c-card h2 { margin: 6px 0 4px; font-family: var(--font-display); font-size: 1.9rem; }
+.c-card p { margin: 0 0 16px; color: var(--ink-2); }
+.c-emoji { font-size: 2rem; }
+.c-join { display: flex; gap: 8px; }
+.c-join input { flex: 1; min-width: 0; padding: 10px 14px; font: inherit; font-size: 1.3rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; border: 2px solid var(--line); border-radius: 12px; }
+.c-join input:focus { outline: none; border-color: var(--accent); }
+
+.c-teacher { padding: 24px 16px 48px; }
+.c-top { display: grid; gap: 16px; align-items: stretch; }
+@media (min-width: 900px) { .c-top { grid-template-columns: 1.4fr 1fr; } }
+.c-code, .c-now, .c-qr { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; }
+.c-code span, .c-now span { display: block; font-size: .78rem; color: var(--muted); }
+.c-code { display: flex; gap: 16px; align-items: center; justify-content: space-between; }
+.c-codetext { min-width: 0; }
+.c-code b { display: block; font-size: clamp(2.4rem, 6vw, 3.6rem); letter-spacing: .14em; line-height: 1.15; white-space: nowrap; }
+.c-code .small { margin: 4px 0 8px; }
+.c-codebtns { display: flex; flex-wrap: wrap; gap: 6px; }
+.c-qr { flex: none; display: grid; place-items: center; padding: 4px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+.c-qr svg { width: 130px; height: 130px; display: block; }
+@media (max-width: 520px) { .c-qr { display: none; } }
+.c-now { background: var(--ink); color: #fff; border-color: var(--ink); }
+.c-now span { color: #b9b7d6; }
+.c-now b { display: block; font-size: 1.25rem; margin: 4px 0 2px; }
+.c-now em { font-style: normal; color: #ffcfb7; font-size: .9rem; }
+.c-grid { display: grid; gap: 16px; margin-top: 16px; }
+@media (min-width: 900px) { .c-grid { grid-template-columns: 1.5fr 1fr; } }
+.c-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; }
+.c-panel h2 { margin: 0 0 2px; font-family: var(--font-display); font-size: 1.7rem; }
+.c-lessons { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 14px; }
+.c-lp { display: grid; place-items: center; width: 46px; height: 52px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--surface); cursor: pointer; font: inherit; line-height: 1.05; }
+.c-lp b { font-family: var(--font-display); font-size: 1.5rem; }
+.c-lp span { font-size: .68rem; color: var(--muted); }
+.c-lp:hover { border-color: var(--ink); }
+.c-lp.sel { background: var(--ink); border-color: var(--ink); color: #fff; }
+.c-lp.sel span { color: #c9c7dd; }
+.c-lhead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; align-items: baseline; margin-bottom: 8px; }
+.c-lhead a { color: var(--accent); }
+.c-parts { display: grid; gap: 8px; }
+.c-part { display: flex; align-items: center; gap: 10px; text-align: left; font: inherit; font-weight: 500; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--line); background: #fffefb; cursor: pointer; color: var(--ink); }
+.c-part span { display: grid; place-items: center; flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--ink); color: #fff; font-size: .78rem; font-weight: 700; }
+.c-part em { font-style: normal; font-size: .72rem; font-weight: 700; color: #1f6fc0; background: #e3f1ff; border-radius: 999px; padding: 1px 8px; margin-left: auto; }
+.c-part:hover { border-color: var(--accent); }
+.c-part.on { border-color: var(--accent); background: var(--accent); color: #fff; box-shadow: 0 3px 0 var(--ink); }
+.c-part.on span { background: #fff; color: var(--accent); }
+.c-partbtns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.c-form { display: grid; gap: 8px; margin: 12px 0 10px; }
+.c-form input { padding: 9px 12px; font: inherit; border: 1.5px solid var(--line); border-radius: 10px; }
+.c-form input:focus { outline: none; border-color: var(--accent); }
+.c-form .btn { justify-self: start; }
+.c-file input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.c-file .btn { cursor: pointer; }
+.c-file input:focus-visible + .btn { outline: 2px solid var(--accent); }
+.c-shares { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 6px; }
+.c-shares li, #s-list li { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; background: var(--soft); font-size: .9rem; }
+.c-shares a, #s-list a { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink); }
+.c-stype { flex: none; font-size: .7rem; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: var(--ink); color: #fff; }
+.c-del { font: inherit; font-size: .78rem; border: 0; background: none; color: var(--muted); cursor: pointer; text-decoration: underline; }
+.c-end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); }
+.c-bigcode { position: fixed; inset: 0; z-index: 40; background: rgba(29,27,75,.92); display: grid; place-items: center; color: #fff; text-align: center; }
+.c-bigcode[hidden] { display: none; }
+.c-bigcode span { font-size: 1.2rem; color: #c9c7dd; }
+.c-bigcode b { display: block; font-size: clamp(4rem, 16vw, 10rem); letter-spacing: .12em; line-height: 1.1; }
+.c-bigcode #qr2 { background: #fff; border-radius: 16px; padding: 10px; width: 220px; margin: 12px auto; }
+.c-bigcode #qr2 svg { width: 200px; height: 200px; display: block; }
+.c-bigcode p { color: #c9c7dd; }
+
+/* 학생 화면 */
+body.c-student-page { display: flex; flex-direction: column; min-height: 100vh; }
+body.c-student-page main { flex: 1; display: flex; flex-direction: column; }
+.c-sbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 10px; padding-bottom: 10px; }
+.c-sbar b#s-count { display: inline-grid; place-items: center; min-width: 20px; height: 20px; border-radius: 999px; background: var(--accent); color: #fff; font-size: .75rem; margin-left: 4px; }
+.btn.glow { border-color: var(--accent); animation: pulse 1.4s ease-in-out infinite; }
+.c-sfiles ul { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 6px; }
+.c-stage { flex: 1; display: flex; min-height: 70vh; border-top: 1px solid var(--line); }
+.c-stage iframe { flex: 1; width: 100%; border: 0; min-height: 70vh; }
+.c-wait { margin: auto; text-align: center; padding: 48px 16px; color: var(--ink-2); }
+.c-waitletters { display: flex; justify-content: center; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
+.c-waitletters span { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--ink); font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; background: #fff; animation: bob 1.6s ease-in-out infinite; }
+.c-waitletters span:nth-child(2n) { animation-delay: .2s; color: var(--accent); }
+.c-waitletters span:nth-child(3n) { animation-delay: .4s; color: var(--p2); }
+@keyframes bob { 50% { transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .c-waitletters span { animation: none; } }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 60; background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 12px; font-size: .92rem; box-shadow: 0 8px 24px rgba(0,0,0,.2); max-width: calc(100% - 32px); }
+.toast[hidden] { display: none; }
+.c-top { align-items: start; }
+.c-url { font-weight: 700; color: var(--ink); word-break: break-all; }
+.c-qr[hidden] { display: none; }
+@media (min-width: 900px) { .c-now, .c-code { align-self: stretch; } }

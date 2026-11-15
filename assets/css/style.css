@@ -208,3 +208,5 @@ a { color: inherit; }
 .lesson-links { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; }
 .lesson-links a.sub { font-weight: 500; color: var(--muted); font-size: .85rem; }
 .site-footer .credit { font-weight: 700; color: var(--ink); }
+.tabs-nav a.nav-class { margin-left: 6px; align-self: center; padding: 7px 14px; border-radius: 999px; background: var(--accent); color: #fff; font-weight: 700; border: 2px solid var(--ink); box-shadow: 0 2px 0 var(--ink); }
+.tabs-nav a.nav-class::after { display: none; }

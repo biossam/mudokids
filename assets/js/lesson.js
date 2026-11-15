@@ -32,7 +32,8 @@
         '<div class="ltitle"><p class="lmeta"><b>' + base.no + "차시</b> <span class=\"lchip\">" + esc(base.word) + "</span> " + PHASE[info.phase] + "</p>" +
           "<h1>" + esc(base.title) + "</h1><p class=\"ltopic\">" + esc(info.topic) + "</p></div>" +
         '<div class="lside"><div class="lgoal"><span>학습 문제</span>' + esc(info.goal) + "</div>" +
-          '<div class="lbtns"><button class="btn primary" id="open-cm">▶ 수업 모드</button><a class="btn ghost" href="live.html?l=' + base.no + '" target="_blank" rel="noopener">실시간 현황</a></div></div>' +
+          '<div class="lbtns"><button class="btn primary" id="open-cm">▶ 수업 모드</button><a class="btn ghost" href="' + liveHref() + '" target="_blank" rel="noopener">실시간 현황</a></div>' +
+          classBar() + "</div>" +
       "</section>" +
       '<div class="ltabs" role="tablist">' +
         tabBtn("ppt", "PPT") + tabBtn("sheet", "활동지") + tabBtn("guide", "수업 안내") + tabBtn("teacher", "선생님 자료") +
@@ -49,7 +50,28 @@
     var saved = location.hash.slice(1) || sessionStorage.getItem(TAB_KEY) || "ppt";
     showTab(["ppt", "sheet", "guide", "teacher"].indexOf(saved) >= 0 ? saved : "ppt");
     document.getElementById("open-cm").onclick = function () { openClass(0); };
+    var pl = document.getElementById("push-lesson"); if (pl) pl.onclick = function () { pushNow(null); };
     bindPpt();
+  }
+
+  // 이 기기에서 연 무.도.키즈 수업이 있으면 실시간 현황을 바로 연결하고, 학생 화면에 띄울 수 있게 함
+  function liveHref() {
+    var c = M.myClass();
+    return "live.html?l=" + base.no + (c ? "#room=" + encodeURIComponent(c.room) + "&key=" + encodeURIComponent(c.teacher) : "");
+  }
+  function classBar() {
+    var c = M.myClass();
+    if (!c) return '<a class="lclass" href="class.html?l=' + base.no + '">이 차시로 수업 열기 (교실 링크 없이) →</a>';
+    return '<div class="lclass on"><span>수업 중 <b>' + esc(c.room) + '</b></span><button class="btn ghost small" id="push-lesson">학생 화면에 이 차시 띄우기</button><a class="small" href="class.html">수업 관리 ↗</a></div>';
+  }
+  function pushNow(part) {
+    return M.push(base.no, part).then(function () { flash("학생 화면에 " + base.no + "차시" + (part == null ? "" : " 활동지 " + (part + 1)) + "을(를) 띄웠어요."); })
+      .catch(function (e) { flash(e.message); if (e.status === 404 || e.status === 403) M.saveClass(null); });
+  }
+  function flash(msg) {
+    var t = document.getElementById("l-toast");
+    if (!t) { t = document.createElement("div"); t.id = "l-toast"; t.className = "l-toast"; document.body.appendChild(t); }
+    t.textContent = msg; t.hidden = false; clearTimeout(flash.t); flash.t = setTimeout(function () { t.hidden = true; }, 3000);
   }
 
   function tabBtn(id, label) { return '<button type="button" role="tab" data-tab="' + id + '">' + label + "</button>"; }
@@ -155,7 +177,8 @@
     cm.innerHTML =
       '<div class="cm-top"><span class="cm-title"><b>' + base.no + "차시</b> " + esc(base.letter) + " · " + esc(base.title) + "</span>" +
         '<span class="cm-tools"><button class="cm-btn" id="cm-sheet">활동지</button>' +
-        '<a class="cm-btn" href="live.html?l=' + base.no + '" target="_blank" rel="noopener">실시간 현황</a>' +
+        (M.myClass() ? '<button class="cm-btn" id="cm-push">학생에게 띄우기</button>' : "") +
+        '<a class="cm-btn" href="' + liveHref() + '" target="_blank" rel="noopener">실시간 현황</a>' +
         '<button class="cm-btn" id="cm-note">메모</button><button class="cm-btn" id="cm-full">전체 화면</button>' +
         '<button class="cm-close" id="cm-close" aria-label="수업 모드 닫기">✕</button></span></div>' +
       '<div class="cm-body"><div class="cm-stage" id="cm-stage"></div><div class="cm-sheet" id="cm-sheetbox" hidden><iframe id="cm-frame" title="활동지"></iframe></div></div>' +
@@ -166,6 +189,7 @@
     cm.querySelector("#cm-next").onclick = function () { cmGo(cmI + 1); };
     cm.querySelector("#cm-close").onclick = closeClass;
     cm.querySelector("#cm-sheet").onclick = toggleSheet;
+    var cp = cm.querySelector("#cm-push"); if (cp) cp.onclick = function () { var s = info.slides[cmI]; pushNow(s.sheet != null ? s.sheet : null); };
     cm.querySelector("#cm-note").onclick = function () { var n = document.getElementById("cm-notebox"); n.hidden = !n.hidden; this.classList.toggle("on", !n.hidden); };
     cm.querySelector("#cm-full").onclick = function () {
       if (document.fullscreenElement) document.exitFullscreen(); else if (cm.requestFullscreen) cm.requestFullscreen();
@@ -187,6 +211,8 @@
     var sb = document.getElementById("cm-sheet");
     sb.classList.toggle("glow", s.sheet != null);
     sb.textContent = s.sheet != null ? "활동지 " + (s.sheet + 1) : "활동지";
+    var cp = document.getElementById("cm-push");
+    if (cp) { cp.textContent = s.sheet != null ? "학생에게 활동지 " + (s.sheet + 1) + " 띄우기" : "학생에게 이 차시 띄우기"; cp.classList.toggle("glow", s.sheet != null); }
   }
   function toggleSheet() {
     var box = document.getElementById("cm-sheetbox"), stage = document.getElementById("cm-stage"), btn = document.getElementById("cm-sheet");

@@ -39,6 +39,15 @@
   - `data/lessons.json`을 고친 뒤 다시 만들기: `node tools/build_pptx.js` (한 차시만: `node tools/build_pptx.js 3`). pptxgenjs 필요
 - 내용은 `data/lessons.json`에서 고칩니다. 슬라이드 `layout`: cover · map · talk · goal · cards · activity · matrix · match · split · sentence · next · finish. `sheet`: 연결할 활동지 파트 번호(0부터)
 
+## 수업하기 (교실 링크 없이, 이 사이트 안에서)
+
+`class.html` — 교실 링크 간단판. 학생 화면 공유는 없음.
+
+- 선생님: **수업 열기**(PIN 없음) → 6자리 참여 코드·QR → 차시·활동을 골라 **학생 화면에 띄우기**, **링크·파일 보내기**(8 MB 이하), **실시간 현황**, **수업 끝내기**
+- 학생: `class.html`에서 코드 입력(또는 `class.html?room=코드`, QR) → 선생님이 띄운 활동지가 자동으로 열리고 바뀜(같은 차시 안에서 활동만 바뀌면 쓴 내용 그대로 그 칸으로 이동), 받은 자료 목록
+- 차시 화면: 이 기기에서 연 수업이 있으면 **학생 화면에 이 차시 띄우기**, 수업 모드의 **학생에게 활동지 띄우기**, 실시간 현황이 바로 연결됨
+- 서버: 교실 링크 서버의 `/api/mdk`(수업·띄우기·자료) + `/api/snja`(활동지 저장·현황). 수업을 끝내거나 선생님 창이 3시간 넘게 닫혀 있거나 연 지 12시간이 지나면 기록과 파일이 모두 지워짐
+
 ## 웹 활동지 · 실시간 수업 (교실 링크 연동)
 
 - 학생 활동지: `sheet.html?l=차시&room=참여코드` — 반·번호·모둠을 쓰면 몇 초마다 교실 링크 서버(`data/sheets.json`의 `live.url`)로 저장. 이름은 기기에만 남음. **다 했어요**로 제출, **활동지 그림으로 저장**(PNG)
@@ -61,6 +70,7 @@
 
 ```
 index.html              소개 화면
+class.html              수업하기 (교실 링크 간단판: 선생님·학생)
 lesson.html             차시 화면 (PPT·활동지·수업 안내·선생님 자료, 수업 모드)
 sheet.html              학생 활동지
 live.html               실시간 현황 (선생님)
@@ -76,4 +86,5 @@ assets/js/slides.js     웹 슬라이드 그리기
 assets/js/lesson.js     차시 화면·수업 모드
 assets/js/sheet.js      학생 활동지 동작
 assets/js/live.js       실시간 현황 동작
+assets/js/class.js      수업하기 동작
 ```

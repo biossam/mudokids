@@ -27,22 +27,35 @@
   // 서버의 차시 번호: 성장 MAP 차시와 섞이지 않도록 51~60을 씀
   M.serverLesson = function (no) { return (M.live.lessonOffset || 50) + Number(no); };
 
-  M.call = function (body) {
+  // 교실 링크 서버 주소 (끝의 /api/snja를 뺀 것)
+  M.server = function () { return String(M.live.url || "").replace(/\/api\/snja\/?$/, ""); };
+
+  M.call = function (body, endpoint) {
     if (!M.live.url) return Promise.reject(new Error("실시간 서버가 설정되지 않았어요."));
-    return fetch(M.live.url, {
+    return fetch(endpoint ? M.server() + endpoint : M.live.url, {
       method: "POST",
       headers: { "Content-Type": "text/plain" },
       body: JSON.stringify(body)
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (j) {
         if (!r.ok || j.ok === false) {
-          var e = new Error(j.error || j.message || "서버와 연결하지 못했어요.");
+          var msg = j.error && typeof j.error === "object" ? j.error.message : j.error;
+          var e = new Error(msg || j.message || (r.status === 413 ? "파일은 8 MB 이하로 보내 주세요." : "서버와 연결하지 못했어요."));
           e.status = r.status;
           throw e;
         }
         return j;
       });
     });
+  };
+
+  // 무.도.키즈 간단 교실: 이 기기에서 연 수업 (선생님)
+  var CLASS_KEY = "mdk-class-v1";
+  M.myClass = function () { try { var c = JSON.parse(localStorage.getItem(CLASS_KEY)); return c && c.room && c.teacher ? c : null; } catch (e) { return null; } };
+  M.saveClass = function (c) { try { if (c) localStorage.setItem(CLASS_KEY, JSON.stringify(c)); else localStorage.removeItem(CLASS_KEY); } catch (e) {} };
+  M.push = function (lesson, part) {
+    var c = M.myClass(); if (!c) return Promise.reject(new Error("열린 수업이 없어요."));
+    return M.call({ action: "push", room: c.room, teacher: c.teacher, lesson: lesson, part: part == null ? null : part }, "/api/mdk");
   };
 
   // 칸 목록: [{ key: "p0.v", part, pi, item }]
