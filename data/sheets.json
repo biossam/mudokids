@@ -1,0 +1,245 @@
+{
+  "live": {
+    "url": "https://classroom-link.onrender.com/api/snja",
+    "name": "교실 링크",
+    "lessonOffset": 50
+  },
+  "lessons": [
+    {
+      "no": 1, "letter": "R", "word": "Respect", "title": "서로 존중하기",
+      "q": "사람과 AI를 대할 때 왜 존중하는 태도가 필요한지 알아봅시다.",
+      "parts": [
+        { "title": "나에게 중요한 가치 찾기", "who": "개인", "items": [
+          { "id": "v", "type": "chips", "label": "나에게 중요한 가치를 3개까지 골라요.", "max": 3,
+            "options": ["친절", "자유", "공정", "배려", "책임", "성공", "정직", "우정"] },
+          { "id": "vw", "type": "text", "label": "가장 중요한 가치를 고른 까닭을 써요." }
+        ]},
+        { "title": "존중의 의미 생각하기", "who": "개인", "items": [
+          { "id": "ai", "type": "text", "label": "AI를 대하는 태도는 사람 사이의 관계와 어떤 관련이 있을까요? 한 문장으로 써요." },
+          { "id": "new", "type": "text", "label": "짝의 생각에서 비슷한 점이나 새롭게 알게 된 점은?" }
+        ]},
+        { "title": "존중받은 경험에서 공통점 찾기", "who": "모둠", "items": [
+          { "id": "act", "type": "text", "label": "친구 이야기에서 들은 감정이나 존중의 행동 한 가지", "hint": "실제 경험이 어려우면 가상의 상황으로 써도 돼요." },
+          { "id": "def", "type": "line", "label": "존중이란 ______ 하는 것이다.", "prefix": "존중이란", "suffix": "하는 것이다." }
+        ]},
+        { "title": "배움 정리", "who": "개인", "items": [
+          { "id": "wrap", "type": "text", "label": "AI 시대에도 사람이 꼭 지켜야 할 태도는 무엇일까요?" }
+        ]}
+      ]
+    },
+    {
+      "no": 2, "letter": "U", "word": "Understand", "title": "인간과 AI 이해하기",
+      "q": "AI가 만든 답과 추천 정보를 어떻게 확인하고 활용해야 할지 알아봅시다.",
+      "parts": [
+        { "title": "그림 속 숨은 편견", "who": "모둠", "items": [
+          { "id": "bias", "type": "text", "label": "그림에서 발견한 고정관념이나 빠진 모습을 써요." },
+          { "id": "why", "type": "text", "label": "AI가 이런 그림을 자주 만들었다면, 어떤 생각이 반영되었을까요?" }
+        ]},
+        { "title": "인간과 AI의 강점 나누기", "who": "모둠", "items": [
+          { "id": "c1", "type": "pick", "label": "공감하기", "options": ["사람", "AI", "함께"] },
+          { "id": "c2", "type": "pick", "label": "사실 확인하기", "options": ["사람", "AI", "함께"] },
+          { "id": "c3", "type": "pick", "label": "반복 계산하기", "options": ["사람", "AI", "함께"] },
+          { "id": "c4", "type": "pick", "label": "많은 자료에서 패턴 찾기", "options": ["사람", "AI", "함께"] },
+          { "id": "c5", "type": "pick", "label": "상황에 맞게 사과하기", "options": ["사람", "AI", "함께"] },
+          { "id": "c6", "type": "pick", "label": "아이디어 초안 만들기", "options": ["사람", "AI", "함께"] },
+          { "id": "final", "type": "text", "label": "AI가 더 잘하더라도 사람이 최종 판단해야 하는 경우와 그 이유" }
+        ]},
+        { "title": "프롬프트 고치고 결과 비교하기", "who": "모둠", "items": [
+          { "id": "hint", "type": "chips", "label": "고칠 때 넣은 조건", "options": ["다양한 성별", "다양한 문화", "장애", "여러 연령", "고정관념 점검", "근거 제시"] },
+          { "id": "prompt", "type": "text", "label": "우리 모둠이 고쳐 쓴 프롬프트" },
+          { "id": "diff", "type": "text", "label": "처음 결과와 비교해 달라진 점" },
+          { "id": "still", "type": "text", "label": "여전히 확인해야 할 점" }
+        ]},
+        { "title": "배움 정리", "who": "개인", "items": [
+          { "id": "wrap", "type": "line", "label": "AI의 답을 믿기 전에 나는 ______을/를 확인하겠다.", "prefix": "AI의 답을 믿기 전에 나는", "suffix": "을/를 확인하겠다." }
+        ]}
+      ]
+    },
+    {
+      "no": 3, "letter": "N", "word": "Notice", "title": "문제 알아차리기",
+      "q": "「원숭이 꽃신」을 통해 편리함에 의존할 때 생길 수 있는 문제와 사람이 지켜야 할 판단을 알아봅시다.",
+      "parts": [
+        { "title": "「원숭이 꽃신」 살펴보기", "who": "개인", "items": [
+          { "id": "gain", "type": "text", "label": "꽃신은 원숭이에게 어떤 편리함을 주었나요?" },
+          { "id": "lost", "type": "text", "label": "꽃신을 신은 뒤 원숭이가 잃게 된 것은?" },
+          { "id": "why", "type": "text", "label": "오소리는 왜 원숭이에게 꽃신을 주었을까요?" }
+        ]},
+        { "title": "이야기와 AI 시대 연결하기", "who": "모둠", "items": [
+          { "id": "m1", "type": "line", "label": "오소리는", "prefix": "오소리 →" },
+          { "id": "m2", "type": "line", "label": "원숭이는", "prefix": "원숭이 →" },
+          { "id": "m3", "type": "line", "label": "꽃신은", "prefix": "꽃신 →" },
+          { "id": "m4", "type": "line", "label": "발바닥은", "prefix": "발바닥 →" },
+          { "id": "reason", "type": "text", "label": "이렇게 연결한 근거" }
+        ]},
+        { "title": "AI 시대의 판단 정리하기", "who": "모둠", "items": [
+          { "id": "keep", "type": "text", "label": "AI를 유익하게 쓰면서도 사람이 계속 맡아야 할 판단은 무엇일까요? 한 문장으로" }
+        ]},
+        { "title": "배움 정리", "who": "개인", "items": [
+          { "id": "wrap", "type": "line", "label": "AI 시대에 내가 잃지 말아야 할 발바닥은 ______이다.", "prefix": "AI 시대에 내가 잃지 말아야 할 발바닥은", "suffix": "이다." }
+        ]}
+      ]
+    },
+    {
+      "no": 4, "letter": "N", "word": "Need empathy", "title": "공감하기",
+      "q": "AI의 조언과 사람의 위로를 비교하며, 마음에 닿는 공감 표현을 만들어 봅시다.",
+      "parts": [
+        { "title": "위로 글에서 공감 요소 찾기", "who": "개인", "items": [
+          { "id": "a", "type": "chips", "label": "글 ①에 있는 공감 요소", "options": ["감정 인정", "상황 이해", "질문하기", "구체적 도움", "기다려 주기"] },
+          { "id": "b", "type": "chips", "label": "글 ②에 있는 공감 요소", "options": ["감정 인정", "상황 이해", "질문하기", "구체적 도움", "기다려 주기"] },
+          { "id": "ab", "type": "text", "label": "두 글에서 각각 도움이 되는 점과 아쉬운 점" }
+        ]},
+        { "title": "상황에 맞는 위로 반응 살펴보기", "who": "모둠", "items": [
+          { "id": "best", "type": "pick", "label": "역할극에서 가장 도움이 된 반응", "options": ["해결책 제시", "감정 인정", "질문하기", "말없이 곁에 있기"] },
+          { "id": "bestw", "type": "text", "label": "그렇게 생각한 까닭, 상황이나 관계가 다르면 달라질 점" }
+        ]},
+        { "title": "학급 ‘위로 대사집’ 만들기", "who": "개인", "items": [
+          { "id": "kind", "type": "pick", "label": "내가 고른 표현", "options": ["감정 알아차리기", "감정 인정하기", "곁에 있기", "도움 제안하기"] },
+          { "id": "line1", "type": "text", "label": "친구에게 건넬 위로 문장" },
+          { "id": "line2", "type": "text", "label": "위로 문장 하나 더 (선택)", "optional": true }
+        ]},
+        { "title": "배움 정리", "who": "개인", "items": [
+          { "id": "wrap", "type": "line", "label": "공감은 ______을/를 먼저 알아차리는 것이다.", "prefix": "공감은", "suffix": "을/를 먼저 알아차리는 것이다." }
+        ]}
+      ]
+    },
+    {
+      "no": 5, "letter": "I", "word": "Interact", "title": "협력하기",
+      "q": "태국 친구와 함께할 춤 뮤직비디오와 씨앗 교류 활동을 구상하며 사람과 AI의 협력 방법을 알아봅시다.",
+      "parts": [
+        { "title": "교류 활동의 목적과 전할 마음", "who": "모둠", "items": [
+          { "id": "heart", "type": "chips", "label": "태국 친구와 나누고 싶은 마음", "options": ["우정", "응원", "환영", "함께 성장", "감사"] },
+          { "id": "how", "type": "text", "label": "춤 뮤직비디오와 씨앗 그림·편지는 각각 어떤 마음을 전할 수 있을까요?" }
+        ]},
+        { "title": "춤 뮤직비디오 초안", "who": "모둠", "items": [
+          { "id": "theme", "type": "line", "label": "함께 표현하고 싶은 주제" },
+          { "id": "moves", "type": "text", "label": "동작·장면 아이디어 (키워드로)" },
+          { "id": "ai", "type": "text", "label": "AI가 도울 일" },
+          { "id": "we", "type": "text", "label": "우리가 직접 정할 일" }
+        ]},
+        { "title": "씨앗 그림·편지 초안", "who": "개인", "items": [
+          { "id": "seed", "type": "text", "label": "마음을 색·선·씨앗의 모습으로 어떻게 표현할까요?" },
+          { "id": "hello", "type": "text", "label": "편지에 담을 인사와 응원 한두 문장" }
+        ]},
+        { "title": "배움 정리", "who": "개인", "items": [
+          { "id": "w1", "type": "line", "label": "AI가 아이디어를 도울 수 있는 부분은", "prefix": "AI가 도울 수 있는 부분은", "suffix": "이고," },
+          { "id": "w2", "type": "line", "label": "우리가 직접 정할 부분은", "prefix": "우리가 직접 정할 부분은", "suffix": "이다." },
+          { "id": "pick", "type": "pick", "label": "더 기대되는 활동", "options": ["춤 뮤직비디오", "씨앗 그림·편지"] }
+        ]}
+      ]
+    },
+    {
+      "no": 6, "letter": "N", "word": "Network", "title": "공동체 연결하기",
+      "q": "한국과 태국의 춤과 음악을 살펴보고, 함께할 뮤직비디오의 의미와 역할을 정해 봅시다.",
+      "parts": [
+        { "title": "한국과 태국의 춤·음악 살펴보기", "who": "개인", "items": [
+          { "id": "same", "type": "text", "label": "공통점 (리듬·동작·의상·공동체 활동)" },
+          { "id": "diff", "type": "text", "label": "차이점" },
+          { "id": "mean", "type": "text", "label": "이 춤이나 음악은 사람들에게 어떤 마음이나 의미를 전할까요?" }
+        ]},
+        { "title": "공동 뮤직비디오의 메시지와 역할", "who": "모둠", "items": [
+          { "id": "msg", "type": "chips", "label": "함께 전할 메시지", "options": ["우정", "환영", "함께 성장하기", "서로 다른 문화의 만남"] },
+          { "id": "scene", "type": "text", "label": "한국·태국 학생이 함께할 동작이나 장면" },
+          { "id": "role", "type": "pick", "label": "내가 맡을 역할", "options": ["동작 만들기", "촬영", "음악·영상 자료", "연습 이끌기", "기타"] }
+        ]},
+        { "title": "디지털 도구를 쓸 때 지킬 점", "who": "모둠", "items": [
+          { "id": "rule", "type": "chips", "label": "AI 번역을 쓸 때 확인할 점", "options": ["번역 결과 다시 확인하기", "이름·연락처 넣지 않기", "무례한 표현이 없는지 살피기", "얼굴·사진은 동의 받기"] },
+          { "id": "rule2", "type": "text", "label": "우리 모둠이 더한 약속 (선택)", "optional": true }
+        ]},
+        { "title": "배움 정리", "who": "개인", "items": [
+          { "id": "wrap", "type": "line", "label": "춤과 음악은 ______을/를 통해 서로 다른 사람을 연결할 수 있다.", "prefix": "춤과 음악은", "suffix": "을/를 통해 서로 다른 사람을 연결할 수 있다." }
+        ]}
+      ]
+    },
+    {
+      "no": 7, "letter": "G", "word": "Grow together", "title": "함께 성장하기",
+      "q": "한국과 태국 학생이 함께 뮤직비디오를 만들고, 협력 과정에서 배운 점을 돌아봅시다.",
+      "parts": [
+        { "title": "소통 방법의 장점과 한계", "who": "개인", "items": [
+          { "id": "z1", "type": "text", "label": "Zoom 실시간 번역 — 편리했던 점" },
+          { "id": "z2", "type": "text", "label": "Zoom 실시간 번역 — 어려웠던 점" },
+          { "id": "d1", "type": "text", "label": "춤·표정으로 한 소통 — 편리했던 점" },
+          { "id": "d2", "type": "text", "label": "춤·표정으로 한 소통 — 어려웠던 점" },
+          { "id": "check", "type": "text", "label": "말이 정확히 통하지 않을 때 서로의 뜻을 확인하는 방법" }
+        ]},
+        { "title": "서로의 기여 돌아보기", "who": "개인", "items": [
+          { "id": "thanks", "type": "text", "label": "친구가 공동 작업에 기여한 점을 구체적인 행동으로 써요.", "hint": "이름 대신 모둠·번호로 써도 돼요." },
+          { "id": "next", "type": "text", "label": "다음에 더 잘하고 싶은 점" }
+        ]},
+        { "title": "배움 정리", "who": "개인", "items": [
+          { "id": "w1", "type": "line", "label": "함께 작업하며 내가 배운 점은", "prefix": "함께 작업하며 내가 배운 점은", "suffix": "이다." },
+          { "id": "w2", "type": "line", "label": "앞으로 함께 활동할 때 나는", "prefix": "앞으로 함께 활동할 때 나는", "suffix": "을/를 실천하겠다." }
+        ]}
+      ]
+    },
+    {
+      "no": 8, "letter": "M", "word": "Mission", "title": "실천하기",
+      "q": "태국 친구에게 마음을 담은 씨앗 그림과 편지를 전하며 인간다운 도움의 의미를 생각해 봅시다.",
+      "parts": [
+        { "title": "한지에 감정 표현하기", "who": "개인", "items": [
+          { "id": "feel", "type": "chips", "label": "전하고 싶은 감정", "options": ["기쁨", "기대", "응원", "감사", "우정"] },
+          { "id": "color", "type": "text", "label": "내가 고른 색과 선, 번짐은 어떤 마음을 담고 있나요?" }
+        ]},
+        { "title": "씨앗 그림과 편지", "who": "개인", "items": [
+          { "id": "l1", "type": "text", "label": "인사" },
+          { "id": "l2", "type": "text", "label": "나의 마음과 응원" },
+          { "id": "l3", "type": "text", "label": "함께 자라나는 씨앗의 의미" },
+          { "id": "th", "type": "line", "label": "넣을 태국어 인사·응원 표현", "hint": "선생님이 확인한 태국어 자료를 참고해요." }
+        ]},
+        { "title": "AI 그림과 내 그림 비교하기", "who": "개인", "items": [
+          { "id": "cmp", "type": "text", "label": "표현 방식·감정 전달·정성·개성의 눈으로 본 차이" }
+        ]},
+        { "title": "배움 정리", "who": "개인", "items": [
+          { "id": "wrap", "type": "line", "label": "사람이 직접 전한 도움에는 ______이/가 담긴다.", "prefix": "사람이 직접 전한 도움에는", "suffix": "이/가 담긴다." },
+          { "id": "new", "type": "text", "label": "태국 친구와의 교류로 새롭게 느낀 점 한 문장" }
+        ]}
+      ]
+    },
+    {
+      "no": 9, "letter": "A", "word": "Action", "title": "행하기",
+      "q": "태국 친구와 나눈 마음을 공동체 도움 활동으로 이어가고, AI를 책임 있게 활용하기 위한 학급 약속을 만들어 봅시다.",
+      "parts": [
+        { "title": "받은 편지에서 실천할 일 찾기", "who": "개인", "items": [
+          { "id": "learn", "type": "text", "label": "친구의 그림·편지에서 새롭게 알게 된 점" },
+          { "id": "do", "type": "text", "label": "받은 마음을 바탕으로 내가 실천하고 싶은 행동 한 가지" }
+        ]},
+        { "title": "공동체 도움 활동", "who": "모둠", "items": [
+          { "id": "need", "type": "text", "label": "누구에게 어떤 도움이 필요한가요?" },
+          { "id": "ask", "type": "pick", "label": "도움받을 사람의 뜻을 먼저 확인했나요?", "options": ["확인했어요", "아직이에요"] },
+          { "id": "plan", "type": "text", "label": "활동 내용 · 역할 · 장소" },
+          { "id": "react", "type": "text", "label": "실천한 뒤: 상대의 반응" },
+          { "id": "good", "type": "text", "label": "잘된 점과 보완할 점" }
+        ]},
+        { "title": "책임 있는 AI 활용 학급 약속", "who": "모둠", "items": [
+          { "id": "promise", "type": "chips", "label": "꼭 넣고 싶은 약속", "options": ["개인정보 넣지 않기", "AI의 답 확인하기", "AI 도움 받은 부분 밝히기", "최종 판단은 사람이 하기"] },
+          { "id": "mine", "type": "text", "label": "우리 모둠이 제안하는 약속" }
+        ]},
+        { "title": "배움 정리", "who": "개인", "items": [
+          { "id": "w1", "type": "line", "label": "교류에서 나눈 ___의 마음을", "prefix": "교류에서 나눈", "suffix": "의 마음을" },
+          { "id": "w2", "type": "line", "label": "___하는 행동으로 이어갔다.", "suffix": "하는 행동으로 이어갔다." }
+        ]}
+      ]
+    },
+    {
+      "no": 10, "letter": "N", "word": "New Future", "title": "미래 만들기",
+      "q": "프로젝트에서 성장한 점을 돌아보고, AI 시대에 어떤 사람으로 살아갈지 미래 선언문을 작성해 봅시다.",
+      "parts": [
+        { "title": "성장한 점 돌아보기", "who": "개인", "items": [
+          { "id": "scene", "type": "pick", "label": "내가 달라진 장면을 고른 활동", "options": ["가치 카드", "위로 대사집", "공동 뮤직비디오", "씨앗 그림·편지", "도움 활동 기록"] },
+          { "id": "before", "type": "text", "label": "처음의 나" },
+          { "id": "after", "type": "text", "label": "달라진 나" },
+          { "id": "help", "type": "text", "label": "변화에 도움이 된 경험" }
+        ]},
+        { "title": "AI 시대의 미래 선언문", "who": "개인", "items": [
+          { "id": "value", "type": "line", "label": "나는 ______을/를 소중히 여기는 사람으로 살아가겠다.", "prefix": "나는", "suffix": "을/를 소중히 여기는 사람으로 살아가겠다." },
+          { "id": "act", "type": "line", "label": "이를 위해 ______을/를 실천하겠다.", "prefix": "이를 위해", "suffix": "을/를 실천하겠다." },
+          { "id": "ai", "type": "text", "label": "AI를 쓸 때 지킬 태도" },
+          { "id": "adapt", "type": "text", "label": "새로운 AI 도구가 생기거나 실천이 어려워지면 이렇게 바꿀래요." }
+        ]},
+        { "title": "배움 정리", "who": "개인", "items": [
+          { "id": "w1", "type": "line", "label": "프로젝트를 통해 배운 점은", "prefix": "프로젝트를 통해 배운 점은", "suffix": "이고," },
+          { "id": "w2", "type": "line", "label": "앞으로", "prefix": "앞으로", "suffix": "을/를 실천하겠다." }
+        ]}
+      ]
+    }
+  ]
+}
