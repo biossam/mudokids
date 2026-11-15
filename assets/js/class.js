@@ -37,7 +37,7 @@
       '<p class="lead">교실 링크 없이 이 사이트 안에서 바로 수업해요. 선생님이 수업을 열면 6자리 참여 코드가 나오고, 학생은 코드로 들어와 선생님이 띄운 활동지를 써요.</p>' +
       '<div class="c-choose">' +
         '<div class="c-card"><span class="c-emoji" aria-hidden="true">🧑‍🏫</span><h2>선생님</h2><p>수업을 열고, 활동지를 학생 화면에 띄우고, 링크·파일을 보내요.</p>' +
-          '<button class="btn primary" id="open">수업 열기</button></div>' +
+          '<button class="btn primary" id="open">수업 열기</button> <a class="btn ghost" href="howto.html" target="_blank" rel="noopener">사용법 한 장</a></div>' +
         '<div class="c-card"><span class="c-emoji" aria-hidden="true">🙋</span><h2>학생</h2><p>선생님께 받은 참여 코드를 써요.</p>' +
           '<form id="join" class="c-join"><input id="code" maxlength="6" autocapitalize="characters" autocomplete="off" placeholder="참여 코드" aria-label="참여 코드"><button class="btn primary">들어가기</button></form></div>' +
       "</div>" +

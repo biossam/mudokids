@@ -99,3 +99,7 @@ assets/js/class.js      수업하기 동작
 ## 차시 배지
 
 `assets/img/badges/{1..10}.png` — Google Gemini로 생성한 그림을 투명 배경, 높이 240px로 손질. `data/sheets.json`의 `badge`로 차시 카드·차시 화면·활동지·슬라이드 표지·PPT 표지에 쓰입니다. 출처 줄에 "차시 배지: Google Gemini로 생성한 이미지"를 표시합니다.
+
+## 사용법 한 장
+
+`howto.html` — 선생님용 A4 한 장 안내(인쇄·PDF 저장 단추). 운영 안내 탭, 수업하기 소개, 수업하기 첫 화면에서 연결됩니다.
