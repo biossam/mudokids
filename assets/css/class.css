@@ -97,3 +97,4 @@ body.c-student-page main { flex: 1; display: flex; flex-direction: column; }
 .c-survey { margin-top: 16px; }
 .c-skills { margin: 12px 0 4px; align-items: center; }
 .c-skills .small { margin-left: 4px; }
+.c-choose > * { min-width: 0; } .c-join input { width: 100%; } .c-join .btn { flex: none; }
