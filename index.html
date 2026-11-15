@@ -13,21 +13,20 @@
 <body>
   <header class="site-header">
     <div class="wrap header-inner">
-      <a class="brand" href="#top">무.도.키즈</a>
-      <nav class="nav" aria-label="바로가기">
-        <a href="#about">연구회</a>
-        <a href="#problem">출발점</a>
-        <a href="#lessons">10차시</a>
-        <a href="#guide">운영 안내</a>
-        <a href="#live">교실 링크 수업</a>
-        <a href="#check">체크리스트</a>
-        <a href="#stories">수업 이야기</a>
+      <a class="brand" href="#intro">무.도.키즈</a>
+      <nav class="nav tabs-nav" aria-label="페이지">
+        <a href="#intro" data-tab="intro">소개</a>
+        <a href="#lessons" data-tab="lessons">10차시</a>
+        <a href="#guide" data-tab="guide">수업 안내</a>
+        <a href="#check" data-tab="check">체크리스트</a>
+        <a href="#stories" data-tab="stories">수업 이야기</a>
       </nav>
     </div>
   </header>
 
   <main id="top">
     <!-- 첫 화면 -->
+    <div class="page" data-page="intro" aria-label="소개">
     <section class="hero">
       <div class="wrap hero-inner">
         <p class="eyebrow">초등 5~6학년 · AI 융합 10차시</p>
@@ -47,6 +46,7 @@
           <li><a href="#l10" title="New Future">N</a></li>
         </ol>
         <p class="hero-note">글자를 누르면 그 차시로 갑니다.</p>
+        <p class="hero-cta"><a class="cta" href="#lessons">10차시 살펴보기 →</a><a class="cta ghost" href="#guide">교실 링크로 수업하기</a></p>
       </div>
     </section>
 
@@ -91,8 +91,10 @@
         </div>
       </div>
     </section>
+    </div>
 
     <!-- 10차시 -->
+    <div class="page" data-page="lessons" aria-label="10차시">
     <section id="lessons" class="section">
       <div class="wrap">
         <h2 class="section-title">RUNNING MAN 10차시</h2>
@@ -294,8 +296,10 @@
         </div>
       </div>
     </section>
+    </div>
 
     <!-- 운영 안내 -->
+    <div class="page" data-page="guide" aria-label="수업 안내">
     <section id="guide" class="section soft">
       <div class="wrap">
         <h2 class="section-title">운영 안내</h2>
@@ -349,8 +353,10 @@
         <p class="small note">학생 이름은 서버로 보내지 않고 기기에만 남아요. 교실 링크에서 수업을 종료하면 활동지 기록도 함께 지워지니, 끝내기 전에 CSV로 받아 두세요. 교실 링크 없이 열면 그 기기에만 저장되고, 그림으로 저장해 낼 수 있어요.</p>
       </div>
     </section>
+    </div>
 
     <!-- 체크리스트 -->
+    <div class="page" data-page="check" aria-label="체크리스트">
     <section id="check" class="section soft">
       <div class="wrap">
         <h2 class="section-title">AI 도구 쓰기 전 체크리스트</h2>
@@ -371,8 +377,10 @@
         <p class="small note">초등에서는 범용 생성형 AI의 연령 기준(대개 만 13세 이상) 때문에 교사 시연이나 교육용 도구로 운영하는 것이 안전합니다. 약관은 서비스·시점마다 바뀌니 수업 전에 꼭 다시 확인하세요.</p>
       </div>
     </section>
+    </div>
 
     <!-- 준비 중 -->
+    <div class="page" data-page="stories" aria-label="수업 이야기">
     <section id="stories" class="section">
       <div class="wrap">
         <h2 class="section-title">수업 이야기</h2>
@@ -401,6 +409,7 @@
         </div>
       </div>
     </section>
+    </div>
   </main>
 
   <footer class="site-footer">
@@ -411,13 +420,36 @@
   </footer>
 
   <script>
-    // 머리글자를 누르면 그 차시 카드를 펼칩니다.
-    function openFromHash() {
-      var el = location.hash && document.getElementById(location.hash.slice(1));
-      if (el && el.tagName === 'DETAILS') el.open = true;
-    }
-    window.addEventListener('hashchange', openFromHash);
-    openFromHash();
+    // 탭으로 페이지 나누기: 주소의 #이름으로 페이지를 고름. #l1~#l10은 10차시 탭에서 그 카드를 펼침
+    (function () {
+      var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
+      var names = pages.map(function (p) { return p.dataset.page; });
+      var labels = pages.map(function (p) { return p.getAttribute('aria-label'); });
+      // 각 페이지 끝에 다음 탭으로 가는 링크
+      pages.forEach(function (p, i) {
+        if (i === pages.length - 1) return;
+        var div = document.createElement('div');
+        div.className = 'wrap next-page';
+        div.innerHTML = '<a href="#' + names[i + 1] + '">다음: ' + labels[i + 1] + ' →</a>';
+        p.appendChild(div);
+      });
+      function route() {
+        var h = decodeURIComponent(location.hash.slice(1)) || 'intro';
+        var target = document.getElementById(h);
+        var page = names.indexOf(h) >= 0 ? h : (target && target.closest('.page') ? target.closest('.page').dataset.page : 'intro');
+        pages.forEach(function (p) { p.hidden = p.dataset.page !== page; });
+        document.querySelectorAll('.tabs-nav a').forEach(function (a) {
+          var on = a.dataset.tab === page;
+          a.classList.toggle('is-on', on);
+          if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+        });
+        if (target && target.tagName === 'DETAILS') target.open = true;
+        if (target && names.indexOf(h) < 0) target.scrollIntoView({ block: 'start' });
+        else window.scrollTo(0, 0);
+      }
+      window.addEventListener('hashchange', route);
+      route();
+    })();
   </script>
 </body>
 </html>
