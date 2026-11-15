@@ -200,3 +200,5 @@ table.eval td { white-space: normal; min-width: 120px; vertical-align: top; font
 }
 .dl-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-bottom: 26px; }
 .dl-row .small { max-width: 560px; }
+.s-credit { position: absolute; right: 6cqw; bottom: 1.8cqw; font-size: 1.15cqw; color: #b7b3c6; }
+.thumb .s-credit { display: none; }

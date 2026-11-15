@@ -1,5 +1,7 @@
 # 무.도.키즈 (mudokids)
 
+출처: 무.도.키즈 교사연구회, NAVER CONNECT, TEACHERS LAB 5
+
 화면 밖으로 나와 함께 뛰다! 실천형 휴먼 프로젝트 「RUNNING MAN」 — 초등 5~6학년 AI 융합 10차시 프로그램 소개 사이트입니다. 성장 MAP·휴먼스킬아트 사이트와 같은 글꼴(제목 Gaegu, 본문 Gothic A1)로 만들었습니다.
 
 - 사이트: https://biossam.github.io/mudokids/

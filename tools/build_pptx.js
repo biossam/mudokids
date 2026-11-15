@@ -17,6 +17,7 @@ const PHASE = {
   p3: { name: "실천하고 미래 만들기", color: "2FB67A", tint: "E7F8EF" },
 };
 const FONT = "맑은 고딕";
+const CREDIT = "출처: 무.도.키즈 교사연구회, NAVER CONNECT, TEACHERS LAB 5";
 const W = 13.333, H = 7.5, MX = 0.9;
 
 function themeFor(ph) {
@@ -40,7 +41,8 @@ async function build(info) {
   pres.layout = "LAYOUT_WIDE";
   pres.theme = { headFontFace: THEME.headFontFace, bodyFontFace: THEME.bodyFontFace };
   pres.title = `${info.no}차시 ${base.title} · 무.도.키즈 RUNNING MAN`;
-  pres.author = "무.도.키즈";
+  pres.author = "무.도.키즈 교사연구회";
+  pres.company = "무.도.키즈 교사연구회 · NAVER CONNECT · TEACHERS LAB 5";
   pres.subject = info.goal;
   const C = pres.SchemeColor;
   const lp = (s) => `${base.letter} · ${s}`;
@@ -54,7 +56,7 @@ async function build(info) {
     return slide;
   }
   const footer = [
-    { text: { text: "무.도.키즈 · RUNNING MAN", options: { x: W - 4.4, y: H - 0.52, w: 3.0, h: 0.3, fontSize: 10, color: C.accent6, align: "right", margin: 0 } } },
+    { text: { text: CREDIT, options: { x: W - 7.4, y: H - 0.52, w: 6.0, h: 0.3, fontSize: 10, color: C.accent6, align: "right", margin: 0 } } },
   ];
   const num = { x: W - 1.3, y: H - 0.52, w: 0.5, h: 0.3, fontSize: 10, color: C.accent6, align: "right" };
 
@@ -143,7 +145,7 @@ async function build(info) {
         slide.addText(info.topic, { placeholder: "sub" });
         bigLetter(slide, MX, 1.95, 3.2, base.letter, 160);
         letterRow(slide, base.no, 5.6, MX, 0.55);
-        T(slide, "무.도.키즈 · 화면 밖으로 나와 함께 뛰다!", { x: MX, y: 6.45, w: 8, h: 0.35, fontSize: 12, color: C.accent6 });
+        T(slide, CREDIT, { x: MX, y: 6.45, w: 9, h: 0.35, fontSize: 12, color: C.accent6 });
         break;
       }
       case "map": {

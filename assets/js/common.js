@@ -1,6 +1,7 @@
 /* 무.도.키즈 공통: 활동지 자료 불러오기, 교실 링크 서버 부르기 */
 (function () {
   var M = (window.MDK = {});
+  M.CREDIT = "출처: 무.도.키즈 교사연구회, NAVER CONNECT, TEACHERS LAB 5";
 
   M.esc = function (s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {

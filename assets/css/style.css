@@ -207,3 +207,4 @@ a { color: inherit; }
 }
 .lesson-links { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; }
 .lesson-links a.sub { font-weight: 500; color: var(--muted); font-size: .85rem; }
+.site-footer .credit { font-weight: 700; color: var(--ink); }

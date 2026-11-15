@@ -32,7 +32,7 @@
           '<div><p class="s-kicker">RUNNING MAN · ' + base.no + "차시 · " + esc(base.word) + "</p>" +
           '<h1 class="s-h1">' + esc(base.title) + "</h1>" +
           '<p class="s-sub">' + esc(info.topic) + "</p></div></div>" + letters(base.no) +
-          '<p class="s-foot">무.도.키즈 · 화면 밖으로 나와 함께 뛰다!</p>';
+          '<p class="s-foot">' + esc(M.CREDIT) + "</p>";
         break;
       case "map":
         body = '<p class="s-kicker">RUNNING MAN 10차시</p><h2 class="s-title">' + (base.no === 10 ? "우리가 달려온 길" : "10차시 동안 우리가 갈 길") + "</h2>" +
@@ -77,11 +77,11 @@
           '<p class="s-sub">' + esc(s.text) + "</p></div>";
         break;
       case "finish":
-        body = '<div class="s-center"><p class="s-kicker">RUNNING MAN 완주!</p><h1 class="s-h1">화면 밖으로 나와<br>함께 뛰었어요</h1></div>' + letters(11);
+        body = '<div class="s-center"><p class="s-kicker">RUNNING MAN 완주!</p><h1 class="s-h1">화면 밖으로 나와<br>함께 뛰었어요</h1></div>' + letters(11) + '<p class="s-foot" style="text-align:center">' + esc(M.CREDIT) + "</p>";
         break;
     }
     return '<div class="slide ' + (s.layout || "") + " " + info.phase + '" data-i="' + idx + '"><div class="s-in">' + body + "</div>" + sheetTag(s, base) +
-      '<span class="s-no">' + esc(base.letter) + " · " + (idx + 1) + "</span></div>";
+      '<span class="s-no">' + esc(base.letter) + " · " + (idx + 1) + "</span>" + (s.layout === "cover" ? "" : '<span class="s-credit">' + esc(M.CREDIT) + "</span>") + "</div>";
   };
 
   M.slideTitle = function (base, info, s) {
