@@ -61,7 +61,7 @@
   }
   function classBar() {
     var c = M.myClass();
-    if (!c) return '<a class="lclass" href="class.html?l=' + base.no + '">이 차시로 수업 열기 (교실 링크 없이)</a>';
+    if (!c) return '<a class="lclass" href="class.html?l=' + base.no + '">이 차시로 수업 열기</a>';
     return '<div class="lclass on"><span>수업 중 <b>' + esc(c.room) + '</b></span><button class="btn ghost small" id="push-lesson">학생 화면에 이 차시 띄우기</button><a class="small" href="class.html">수업 관리 ↗</a></div>';
   }
   function pushNow(part) {
