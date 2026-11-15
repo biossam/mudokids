@@ -33,6 +33,8 @@
 
 - **수업 모드**: 슬라이드를 크게 띄움. ← → 키로 넘기고, 활동지가 연결된 장에서는 **활동지** 버튼이 주황색으로 빛남(W 키로 활동지 ↔ PPT). 메모, 전체 화면, 실시간 현황
 - 주소에 `&s=장번호`를 붙이면 그 장부터 열림
+- **수업 PPT(.pptx)**: `files/차시/ppt.pptx` — 웹 슬라이드와 같은 내용, 발표자 메모는 슬라이드 노트, 글꼴 맑은 고딕. PPT 탭과 선생님 자료 탭에서 내려받기
+  - `data/lessons.json`을 고친 뒤 다시 만들기: `node tools/build_pptx.js` (한 차시만: `node tools/build_pptx.js 3`). pptxgenjs 필요
 - 내용은 `data/lessons.json`에서 고칩니다. 슬라이드 `layout`: cover · map · talk · goal · cards · activity · matrix · match · split · sentence · next · finish. `sheet`: 연결할 활동지 파트 번호(0부터)
 
 ## 웹 활동지 · 실시간 수업 (교실 링크 연동)
@@ -65,6 +67,8 @@ data/sheets.json        차시별 활동지 칸, 교실 링크 서버 주소
 assets/css/style.css    디자인
 assets/css/sheet.css    활동지·현황 디자인
 assets/css/lesson.css   차시 화면·슬라이드·수업 모드 디자인
+files/<차시>/ppt.pptx   수업 PPT
+tools/build_pptx.js     수업 PPT 만들기
 assets/js/common.js     자료 불러오기, 서버 부르기
 assets/js/slides.js     웹 슬라이드 그리기
 assets/js/lesson.js     차시 화면·수업 모드

@@ -68,7 +68,8 @@
       '<div class="ppt-main"><div class="ppt-stage" id="stage"></div>' +
         '<div class="ppt-bar"><span class="ppt-count" id="count"></span>' +
           '<span class="ppt-nav"><button class="btn ghost small" id="prev" aria-label="이전 장">◀</button><button class="btn ghost small" id="next" aria-label="다음 장">▶</button></span>' +
-          '<button class="btn ghost small" id="from-here">▶ 이 장부터 수업 모드</button></div>' +
+          '<button class="btn ghost small" id="from-here">▶ 이 장부터 수업 모드</button>' +
+          '<a class="btn ghost small" href="files/' + base.no + '/ppt.pptx" download="무도키즈_' + base.no + '차시_' + esc(base.title).replace(/\s+/g, "") + '.pptx">PPT 내려받기 (.pptx)</a></div>' +
         '<div class="ppt-note"><span>발표자 메모</span><p id="note"></p></div>' +
       "</div>" +
       '<div class="ppt-thumbs" id="thumbs">' + info.slides.map(function (s, i) {
@@ -132,7 +133,10 @@
 
   /* ── 선생님 자료 ── */
   function teacherHtml() {
-    return '<h2 class="g-title">휴먼스킬 목표</h2><div class="skill-cards">' + info.skills.map(function (k) {
+    return '<h2 class="g-title">수업 자료 내려받기</h2><div class="dl-row">' +
+        '<a class="btn primary" href="files/' + base.no + '/ppt.pptx" download="무도키즈_' + base.no + '차시_' + esc(base.title).replace(/\s+/g, "") + '.pptx">수업 PPT (.pptx)</a>' +
+        '<span class="small">사이트의 슬라이드와 같은 내용이에요. 발표자 메모는 PowerPoint 슬라이드 노트에 들어 있고, 글자는 모두 고칠 수 있어요. 글꼴: 맑은 고딕</span></div>' +
+      '<h2 class="g-title">휴먼스킬 목표</h2><div class="skill-cards">' + info.skills.map(function (k) {
         return '<div class="g-box"><h3>' + esc(k.name) + '</h3><dl><dt>지식·이해</dt><dd>' + esc(k.know) + "</dd><dt>과정·기능</dt><dd>" + esc(k.do) + "</dd><dt>가치·태도</dt><dd>" + esc(k.value) + "</dd></dl></div>";
       }).join("") + "</div>" +
       '<h2 class="g-title">평가 기준</h2><div class="table-wrap"><table class="live eval"><thead><tr><th>평가 관점</th><th>평가 목표</th><th>상</th><th>중</th><th>하</th><th>방법</th></tr></thead><tbody>' +
