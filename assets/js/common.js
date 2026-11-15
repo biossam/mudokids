@@ -53,10 +53,12 @@
   var CLASS_KEY = "mdk-class-v1";
   M.myClass = function () { try { var c = JSON.parse(localStorage.getItem(CLASS_KEY)); return c && c.room && c.teacher ? c : null; } catch (e) { return null; } };
   M.saveClass = function (c) { try { if (c) localStorage.setItem(CLASS_KEY, JSON.stringify(c)); else localStorage.removeItem(CLASS_KEY); } catch (e) {} };
-  M.push = function (lesson, part) {
+  M.push = function (lesson, part, opt) {
     var c = M.myClass(); if (!c) return Promise.reject(new Error("열린 수업이 없어요."));
-    return M.call({ action: "push", room: c.room, teacher: c.teacher, lesson: lesson, part: part == null ? null : part }, "/api/mdk");
+    return M.call({ action: "push", room: c.room, teacher: c.teacher, lesson: lesson, part: part == null ? null : part, opt: opt || "" }, "/api/mdk");
   };
+  // 휴먼스킬 설문은 서버 61(사전)·62(사후)차시로 띄움
+  M.SURVEY = { 61: "pre", 62: "post" };
 
   // 칸 목록: [{ key: "p0.v", part, pi, item }]
   M.fieldsOf = function (lesson) {

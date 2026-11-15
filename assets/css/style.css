@@ -210,3 +210,6 @@ a { color: inherit; }
 .site-footer .credit { font-weight: 700; color: var(--ink); }
 .tabs-nav a.nav-class { margin-left: 6px; align-self: center; padding: 7px 14px; border-radius: 999px; background: var(--accent); color: #fff; font-weight: 700; border: 2px solid var(--ink); box-shadow: 0 2px 0 var(--ink); }
 .tabs-nav a.nav-class::after { display: none; }
+/* 차시 배지 그림 (Google Gemini로 생성) */
+.badge-img { width: 56px; height: auto; border-radius: 0; background: none; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(29,27,75,.18)); }
+@media (max-width: 560px) { .badge-img { width: 46px; height: auto; } }

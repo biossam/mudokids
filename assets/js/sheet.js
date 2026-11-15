@@ -72,7 +72,7 @@
     var app = document.getElementById("app");
     app.innerHTML =
       '<section class="sheet-hero">' +
-        '<span class="sheet-badge">' + esc(lesson.letter) + "</span>" +
+        (lesson.badge ? '<img class="sheet-badge sheet-badge-img" src="' + esc(lesson.badge) + '" alt="' + lesson.no + '차시 배지">' : '<span class="sheet-badge">' + esc(lesson.letter) + "</span>") +
         "<div><p class=\"sheet-no\">" + lesson.no + "차시 · " + esc(lesson.word) + "</p>" +
         '<h1 class="sheet-title">' + esc(lesson.title) + "</h1>" +
         '<p class="sheet-q">' + esc(lesson.q) + "</p></div>" +

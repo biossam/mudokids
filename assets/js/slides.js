@@ -28,7 +28,7 @@
     var body = "";
     switch (s.layout) {
       case "cover":
-        body = '<div class="s-cover"><span class="s-bigletter">' + esc(base.letter) + "</span>" +
+        body = '<div class="s-cover">' + (base.badge ? '<img class="s-bigbadge" src="' + esc(base.badge) + '" alt="' + base.no + '차시 배지">' : '<span class="s-bigletter">' + esc(base.letter) + "</span>") +
           '<div><p class="s-kicker">RUNNING MAN · ' + base.no + "차시 · " + esc(base.word) + "</p>" +
           '<h1 class="s-h1">' + esc(base.title) + "</h1>" +
           '<p class="s-sub">' + esc(info.topic) + "</p></div></div>" + letters(base.no) +

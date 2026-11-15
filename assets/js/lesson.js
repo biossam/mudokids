@@ -28,7 +28,7 @@
     app.innerHTML =
       '<p class="crumb"><a href="./#lessons">RUNNING MAN 10차시</a></p>' +
       '<section class="lhead ' + info.phase + '">' +
-        '<span class="lbadge">' + esc(base.letter) + "</span>" +
+        (base.badge ? '<img class="lbadge lbadge-img" src="' + esc(base.badge) + '" alt="' + base.no + '차시 배지 (Google Gemini로 생성한 이미지)">' : '<span class="lbadge">' + esc(base.letter) + "</span>") +
         '<div class="ltitle"><p class="lmeta"><b>' + base.no + "차시</b> <span class=\"lchip\">" + esc(base.word) + "</span> " + PHASE[info.phase] + "</p>" +
           "<h1>" + esc(base.title) + "</h1><p class=\"ltopic\">" + esc(info.topic) + "</p></div>" +
         '<div class="lside"><div class="lgoal"><span>학습 문제</span>' + esc(info.goal) + "</div>" +

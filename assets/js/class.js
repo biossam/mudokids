@@ -19,7 +19,9 @@
   function lessonOf(no) { return M.data.lessons.filter(function (l) { return l.no === Number(no); })[0]; }
   function cleanCode(v) { return String(v || "").replace(/[^0-9A-Za-z]/g, "").toUpperCase().slice(0, 6); }
 
-  M.load().then(function () {
+  var SV = null;
+  Promise.all([M.load(), fetch("data/survey.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return null; })]).then(function (res) {
+    SV = res[1];
     var room = cleanCode(q.get("room"));
     if (room) return student(room);
     var mine = M.myClass();
@@ -82,6 +84,10 @@
           '<label class="c-file"><input type="file" id="file"><span class="btn ghost small">파일 보내기 (8 MB 이하)</span></label>' +
           '<ul class="c-shares" id="shares"></ul></section>' +
       "</div>" +
+      (SV ? '<section class="c-panel c-survey"><h2>휴먼스킬 설문</h2><p class="small">프로젝트 시작 전(1차시 앞)에 <b>사전</b>, 끝난 뒤(10차시 끝)에 <b>사후</b> 설문을 한 번씩 띄워요. 이번 수업에서 키운 휴먼스킬만 골라 보낼 수 있어요. 기록은 12시간 뒤 지워지니 사전 설문 뒤 <b>설문 결과 → CSV 받기</b>로 꼭 받아 두세요.</p>' +
+        '<div class="chips c-skills" id="skills"></div>' +
+        '<div class="c-partbtns"><button type="button" class="btn ghost small" id="sv-pre">사전 설문 띄우기</button><button type="button" class="btn ghost small" id="sv-post">사후 설문 띄우기</button>' +
+        '<a class="btn ghost small" id="sv-res" target="_blank" rel="noopener">설문 결과 ↗</a></div></section>' : "") +
       '<div class="c-end"><span class="small">수업을 끝내면 학생 기록과 보낸 파일이 모두 지워져요. 끝내기 전에 실시간 현황에서 CSV를 받아 두세요.</span><button class="btn ghost" id="end">수업 끝내기</button></div>' +
       "</section>" +
       '<div class="c-bigcode" id="bigcode" hidden><div><span>참여 코드</span><b>' + esc(c.room) + '</b><div id="qr2"></div><p>' + esc(studentLink(c.room).replace(/^https?:\/\//, "")) + '</p><button class="btn primary" id="closebig">닫기</button></div></div>';
@@ -112,6 +118,7 @@
         .catch(function (er) { input.value = ""; toast(er.message); });
     };
     paintLessons();
+    if (SV) paintSurvey();
     refreshTeacher();
     var tick = 0;
     clearInterval(timer); timer = setInterval(function () { tick++; if (!document.hidden || tick % 3 === 0) refreshTeacher(); }, 5000);
@@ -157,9 +164,31 @@
     };
   }
 
+  var SKILL_KEY = "mdk-survey-skills";
+  function chosenSkills() { try { var v = JSON.parse(localStorage.getItem(SKILL_KEY)); if (Array.isArray(v) && v.length) return v; } catch (e) {} return SV.skills.map(function (k) { return k.id; }); }
+  function paintSurvey() {
+    var on = chosenSkills(), box = document.getElementById("skills");
+    box.innerHTML = SV.skills.map(function (k) { var o = on.indexOf(k.id) >= 0; return '<button type="button" class="chip' + (o ? " on" : "") + '" aria-pressed="' + o + '" data-sk="' + k.id + '">' + esc(k.name) + "</button>"; }).join("") +
+      '<span class="small">' + on.length + "개 · 문항 " + (on.length * 2) + "개</span>";
+    box.onclick = function (e) {
+      var b = e.target.closest("[data-sk]"); if (!b) return;
+      var cur = chosenSkills(), i = cur.indexOf(b.dataset.sk);
+      if (i >= 0) { if (cur.length === 1) return toast("하나는 골라야 해요."); cur.splice(i, 1); } else cur.push(b.dataset.sk);
+      try { localStorage.setItem(SKILL_KEY, JSON.stringify(cur)); } catch (er) {}
+      paintSurvey();
+    };
+    var pushSv = function (lesson, label) {
+      M.push(lesson, null, chosenSkills().join(",")).then(function (r) { T.state = Object.assign({}, T.state, { lesson: r.lesson, part: r.part, opt: r.opt }); paintLessons(); paintNow(); toast(label + "을 학생 화면에 띄웠어요."); }).catch(handleErr);
+    };
+    document.getElementById("sv-pre").onclick = function () { pushSv(61, "사전 설문"); };
+    document.getElementById("sv-post").onclick = function () { pushSv(62, "사후 설문"); };
+    document.getElementById("sv-res").href = "survey-results.html" + (q.get("server") ? "?server=" + encodeURIComponent(q.get("server")) : "") + "#room=" + encodeURIComponent(T.c.room) + "&key=" + encodeURIComponent(T.c.teacher);
+  }
+
   function paintNow() {
     var st = T.state || {}, el = document.getElementById("now"); if (!el) return;
     var l = st.lesson ? lessonOf(st.lesson) : null;
+    if (M.SURVEY[st.lesson]) { el.innerHTML = "<span>지금 학생 화면</span><b>휴먼스킬 " + (st.lesson === 61 ? "사전" : "사후") + " 설문</b><em>" + ((st.opt || "").split(",").filter(Boolean).length || "전체") + "개 휴먼스킬</em>"; return; }
     el.innerHTML = '<span>지금 학생 화면</span>' + (l
       ? "<b>" + l.no + "차시 " + esc(l.letter) + " · " + esc(l.title) + "</b><em>" + (st.part == null ? "활동지 처음부터" : (st.part + 1) + ". " + esc((l.parts[st.part] || {}).title || "")) + "</em>"
       : "<b>대기 화면</b><em>활동지를 고르면 학생 화면이 바뀌어요.</em>");
@@ -225,8 +254,19 @@
   }
 
   function showStudent(code, r) {
-    var l = r.lesson ? lessonOf(r.lesson) : null;
-    document.getElementById("s-now").innerHTML = l ? "<b>" + l.no + "차시 " + esc(l.letter) + " · " + esc(l.title) + "</b>" : "선생님을 기다리는 중";
+    var sv = M.SURVEY[r.lesson];
+    var l = r.lesson && !sv ? lessonOf(r.lesson) : null;
+    document.getElementById("s-now").innerHTML = sv ? "<b>휴먼스킬 " + (sv === "pre" ? "시작 전" : "마친 뒤") + " 설문</b>" : l ? "<b>" + l.no + "차시 " + esc(l.letter) + " · " + esc(l.title) + "</b>" : "선생님을 기다리는 중";
+    if (sv) {
+      var key0 = "sv/" + r.lesson + "/" + (r.opt || "") + "/" + r.t;
+      if (key0 !== S.key) {
+        S.key = key0; S.lesson = r.lesson;
+        document.getElementById("s-stage").innerHTML = '<iframe id="s-frame" title="휴먼스킬 설문" src="' + esc("survey.html?phase=" + sv + "&room=" + code + "&embed=1&skills=" + encodeURIComponent(r.opt || "") + serverQs()) + '"></iframe>';
+        toast("설문이 열렸어요.");
+      }
+      paintShares_(r);
+      return;
+    }
     var key = r.lesson + "/" + (r.part == null ? "" : r.part) + "/" + r.t;
     if (key !== S.key) {
       var prevLesson = S.lesson; S.key = key; S.lesson = r.lesson;
@@ -245,6 +285,10 @@
         if (prevLesson !== undefined) toast(l.no + "차시 활동지가 열렸어요.");
       }
     }
+    paintShares_(r);
+  }
+
+  function paintShares_(r) {
     var shares = r.shares || [];
     document.getElementById("s-count").textContent = shares.length;
     document.getElementById("s-list").innerHTML = shares.length ? shares.map(function (s) {

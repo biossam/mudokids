@@ -157,3 +157,4 @@ table.ev-table td { white-space: normal; vertical-align: top; min-width: 150px; 
 .conflict { margin-top: 6px; padding: 10px 12px; border-radius: 12px; background: #fff4e5; border: 1.5px solid #ffc58f; font-size: .88rem; }
 .conflict .cf-text { margin: 4px 0 8px; white-space: pre-wrap; color: var(--ink-2); }
 .cf-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.sheet-badge-img { width: 72px; height: auto; border-radius: 0; background: none; border: 0; box-shadow: none; filter: drop-shadow(0 3px 3px rgba(29,27,75,.2)); }

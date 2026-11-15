@@ -89,3 +89,13 @@ assets/js/sheet.js      학생 활동지 동작
 assets/js/live.js       실시간 현황 동작
 assets/js/class.js      수업하기 동작
 ```
+
+## 휴먼스킬 사전·사후 설문
+
+- 학생: `survey.html?phase=pre|post&room=코드&skills=agency,critical` — 문항은 `data/survey.json`(휴먼스킬 12개 × 2문항, 5점 얼굴 단추, 열린 질문 1개). 연구회 공식 문항이 정해지면 이 파일만 바꾸면 됩니다.
+- 선생님: 수업하기 → 휴먼스킬 설문에서 휴먼스킬을 고르고 사전/사후 설문 띄우기. 서버에는 61(사전)·62(사후)차시로 저장되고, 고른 휴먼스킬은 push의 `opt`로 학생 화면에 전달됩니다.
+- 결과: `survey-results.html` — 휴먼스킬별 사전·사후 평균, 같은 반·번호끼리 비교한 변화, 문항별 평균, CSV. 수업 기록은 12시간 뒤 지워지므로 사전 결과 CSV를 받아 두었다가 사후 때 **지난 CSV 불러오기**로 합칩니다.
+
+## 차시 배지
+
+`assets/img/badges/{1..10}.png` — Google Gemini로 생성한 그림을 투명 배경, 높이 240px로 손질. `data/sheets.json`의 `badge`로 차시 카드·차시 화면·활동지·슬라이드 표지·PPT 표지에 쓰입니다. 출처 줄에 "차시 배지: Google Gemini로 생성한 이미지"를 표시합니다.

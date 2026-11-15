@@ -143,9 +143,13 @@ async function build(info) {
         slide.addText(`RUNNING MAN · ${base.no}차시 · ${base.word}`, { placeholder: "kicker" });
         slide.addText(base.title, { placeholder: "title" });
         slide.addText(info.topic, { placeholder: "sub" });
-        bigLetter(slide, MX, 1.95, 3.2, base.letter, 160);
+        const badgeFile = base.badge && path.join(ROOT, base.badge);
+        if (badgeFile && fs.existsSync(badgeFile)) {
+          const [bw, bh] = [fs.readFileSync(badgeFile).readUInt32BE(16), fs.readFileSync(badgeFile).readUInt32BE(20)];
+          slide.addImage({ path: badgeFile, x: MX, y: 1.85, h: 3.4, w: 3.4 * bw / bh, altText: `${base.no}차시 배지 (Google Gemini로 생성한 이미지)`, objectName: "badge" });
+        } else bigLetter(slide, MX, 1.95, 3.2, base.letter, 160);
         letterRow(slide, base.no, 5.6, MX, 0.55);
-        T(slide, CREDIT, { x: MX, y: 6.45, w: 9, h: 0.35, fontSize: 12, color: C.accent6 });
+        T(slide, CREDIT + (badgeFile ? " · 차시 배지: Google Gemini로 생성한 이미지" : ""), { x: MX, y: 6.45, w: 9, h: 0.35, fontSize: 12, color: C.accent6 });
         break;
       }
       case "map": {

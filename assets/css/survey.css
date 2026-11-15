@@ -1,0 +1,33 @@
+/* 휴먼스킬 설문 */
+.sv-hero { display: flex; gap: 18px; align-items: center; padding: 32px 0 18px; }
+.sv-badge { flex: none; display: grid; place-items: center; width: 72px; height: 72px; border-radius: 22px; font-size: 2.4rem; background: var(--soft); border: 2px solid var(--ink); box-shadow: 0 4px 0 var(--ink); }
+.sv-list { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 12px; }
+.sv-item { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+.sv-item.done { border-color: #bfe8d2; }
+.sv-text { margin: 0 0 10px; font-weight: 500; display: flex; gap: 10px; align-items: baseline; }
+.sv-text span { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--ink); color: #fff; font-size: .75rem; font-weight: 700; }
+.sv-item.done .sv-text span { background: var(--p3); }
+.sv-scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.sv-opt { font: inherit; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 2px; border-radius: 12px; border: 1.5px solid var(--line); background: #fffefb; cursor: pointer; color: var(--ink-2); }
+.sv-opt b { font-size: 1.6rem; line-height: 1.2; filter: grayscale(.6); opacity: .75; }
+.sv-opt span { font-size: .7rem; line-height: 1.25; text-align: center; }
+.sv-opt:hover { border-color: var(--accent); }
+.sv-opt.on { border-color: var(--ink); background: var(--soft); box-shadow: 0 3px 0 var(--ink); color: var(--ink); font-weight: 700; }
+.sv-opt.on b { filter: none; opacity: 1; }
+.sv-open { margin-bottom: 8px; }
+@media (max-width: 420px) { .sv-opt span { font-size: .62rem; } .sv-opt b { font-size: 1.35rem; } }
+
+/* 설문 결과 */
+.sr-skill { display: grid; grid-template-columns: 140px 1fr 90px; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+.sr-skill:last-child { border-bottom: 0; }
+.sr-name { font-weight: 700; }
+.sr-bars { display: grid; gap: 4px; }
+.sr-bar { display: flex; align-items: center; gap: 8px; font-size: .78rem; color: var(--muted); }
+.sr-bar i { display: block; height: 14px; border-radius: 7px; min-width: 2px; }
+.sr-bar.pre i { background: #c9c3b5; }
+.sr-bar.post i { background: var(--p3); }
+.sr-delta { font-weight: 800; text-align: right; }
+.sr-delta.up { color: #13824f; } .sr-delta.down { color: #c4501b; }
+.sr-legend { display: flex; gap: 16px; font-size: .8rem; color: var(--muted); margin: 0 0 8px; }
+.sr-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 4px; margin-right: 5px; vertical-align: -1px; }
+@media (max-width: 560px) { .sr-skill { grid-template-columns: 1fr 70px; } .sr-bars { grid-column: 1 / -1; grid-row: 2; } }
