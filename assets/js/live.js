@@ -136,7 +136,8 @@
         var groups = data.groups || {}, rows = [];
         Object.keys(groups).forEach(function (g) {
           var gv = groupValue(groups[g], f);
-          if (gv && M.filled(gv.v)) rows.push("<li><b>" + esc(g) + "모둠</b>" + esc(M.show(gv.v)) + (gv.by ? ' <span class="small">(' + esc(gv.by) + " 마지막으로 씀)</span>" : "") + "</li>");
+          if (gv && M.filled(gv.v)) rows.push("<li><b>" + esc(g) + "모둠</b>" + esc(M.show(gv.v)) + (gv.by ? ' <span class="small">(' + esc(whoLabel(gv.by)) + " 마지막으로 씀)</span>" : "") +
+            ' <button type="button" class="btn ghost small hist-btn" data-hist="' + esc(g) + '" data-field="' + esc(f.key) + '">기록</button></li>');
         });
         list.filter(function (s) { return !s.group; }).forEach(function (s) {
           rows.push("<li><b>" + esc(s.ban) + "-" + esc(s.no) + "</b>" + esc(M.show(s.fields[f.key])) + "</li>");
@@ -169,9 +170,46 @@
     return g[f.key] ? { v: g[f.key].v, by: g[f.key].by } : null;
   }
 
+  function whoLabel(by) { return by === "T" ? "선생님" : String(by || "").replace("-", "반 ") + (by && by !== "T" ? "번" : ""); }
+
+  // ④ 모둠 칸 기록: 누가 언제 무엇으로 고쳤는지 보고, 예전 내용으로 되돌림
+  function showHistory(g, key) {
+    var f = M.fieldsOf(lesson).filter(function (x) { return x.key === key; })[0]; if (!f) return;
+    var box = document.getElementById("answer"), card = document.getElementById("answer-card");
+    var close = function () { box.hidden = true; };
+    var paint = function (items) {
+      card.innerHTML = "<h2>" + esc(g) + "모둠 · " + esc(f.item.label) + "</h2><p class=\"small\">고친 기록이에요(최근 것부터). 같은 학생이 1분 안에 이어 쓴 것은 한 줄로 묶었어요. 장난으로 지워졌으면 예전 내용으로 되돌려 주세요.</p>" +
+        (items.length ? '<ol class="hist">' + items.map(function (it, i) {
+          var opt = it.field.indexOf("|") > 0 ? it.field.slice(it.field.indexOf("|") + 1) : null;
+          var text = opt != null ? "‘" + opt + "’ " + (it.v ? "고름" : "뺌") : M.show(it.v) || "(지움)";
+          var tm = new Date(it.t).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+          return "<li><div><b>" + esc(whoLabel(it.by)) + '</b> <span class="small">' + tm + "</span></div><p>" + esc(text) + "</p>" +
+            (i ? '<button type="button" class="btn ghost small" data-restore="' + i + '">이 내용으로 되돌리기</button>' : '<span class="small">지금 내용</span>') + "</li>";
+        }).join("") + "</ol>" : "<p>아직 기록이 없어요.</p>") +
+        '<p style="margin-top:18px"><button class="btn primary" id="close-answer">닫기</button></p>';
+      card.querySelector("#close-answer").onclick = close;
+      card.onclick = function (e) {
+        var b = e.target.closest("[data-restore]"); if (!b) return;
+        var it = items[Number(b.dataset.restore)];
+        b.disabled = true;
+        M.call({ action: "restore", room: conn.room, teacher: conn.key, lesson: M.serverLesson(lesson.no), group: g, field: it.field, v: it.v })
+          .then(function () { poll(); load(); }, function (er) { alert(er.message); b.disabled = false; });
+      };
+    };
+    var load = function () {
+      M.call({ action: "history", room: conn.room, teacher: conn.key, lesson: M.serverLesson(lesson.no), group: g, field: key })
+        .then(function (r) { paint(r.items || []); }, function (er) { card.innerHTML = "<p>" + esc(er.message) + '</p><button class="btn primary" id="close-answer">닫기</button>'; card.querySelector("#close-answer").onclick = close; });
+    };
+    card.innerHTML = '<p class="status">기록을 불러오는 중…</p>'; box.hidden = false;
+    box.onclick = function (e) { if (e.target === box) close(); };
+    document.onkeydown = function (e) { if (e.key === "Escape") close(); };
+    load();
+  }
+
   function bindBoard(board) {
     board.onclick = function (e) {
-      var v = e.target.closest("[data-view]"), u = e.target.closest("[data-unlock]");
+      var v = e.target.closest("[data-view]"), u = e.target.closest("[data-unlock]"), hb = e.target.closest("[data-hist]");
+      if (hb) return showHistory(hb.dataset.hist, hb.dataset.field);
       if (v) return showAnswer(v.dataset.view);
       if (u) M.call({ action: "unlock", room: conn.room, teacher: conn.key, lesson: M.serverLesson(lesson.no), sid: u.dataset.unlock }).then(poll, function (er) { alert(er.message); });
     };
@@ -185,7 +223,7 @@
       html += "<h3>" + (pi + 1) + ". " + esc(p.title) + (p.who === "모둠" ? " (모둠이 함께 쓴 칸)" : "") + "</h3><dl>" +
         p.items.map(function (it) {
           var f = { key: "p" + pi + "." + it.id, item: it }, gv = gg ? groupValue(gg, f) : null;
-          return "<dt>" + esc(it.label) + (gv && gv.by ? " · " + esc(gv.by) + " 마지막으로 씀" : "") + "</dt><dd>" + (esc(M.show(gv ? gv.v : s.fields[f.key])) || "-") + "</dd>";
+          return "<dt>" + esc(it.label) + (gv && gv.by ? " · " + esc(whoLabel(gv.by)) + " 마지막으로 씀" : "") + "</dt><dd>" + (esc(M.show(gv ? gv.v : s.fields[f.key])) || "-") + "</dd>";
         }).join("") + "</dl>";
     });
     html += '<p style="margin-top:18px"><button class="btn primary" id="close-answer">닫기</button></p>';

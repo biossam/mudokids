@@ -299,8 +299,8 @@
         if (submit) flash("선생님께 보냈어요. 고치면 다시 자동으로 저장돼요.");
       })
       .catch(function (err) {
-        if (err.status === 409) {
-          chip("다른 기기에서 쓰는 번호예요", false);
+        if (err.status === 409 || err.status === 422) {
+          chip(err.status === 409 ? "다른 기기에서 쓰는 번호예요" : "번호를 확인해요", false);
           var k = w.room + "/" + w.ban + "-" + w.no;
           if (submit || lastWarn !== k) { lastWarn = k; alert(err.message); }
           return;
@@ -375,7 +375,7 @@
     var box = document.querySelector('[data-key="' + gk + '"]'); if (!box) return;
     var old = box.querySelector(".conflict"); if (old) old.remove();
     var d = document.createElement("div"); d.className = "conflict"; d.dataset.cfk = gk;
-    d.innerHTML = "<b>" + esc(String(c.by || "").replace("-", "반 ")) + "번이 이 칸을 먼저 고쳤어요.</b>" +
+    d.innerHTML = "<b>" + (c.by === "T" ? "선생님이" : esc(String(c.by || "").replace("-", "반 ")) + "번이") + " 이 칸을 먼저 고쳤어요.</b>" +
       '<p class="cf-text">“' + esc(remote) + '”</p>' +
       '<div class="cf-btns"><button type="button" class="btn ghost small" data-cf="theirs">친구 글로</button>' +
       '<button type="button" class="btn ghost small" data-cf="both">둘 다 남기기</button>' +

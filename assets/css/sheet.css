@@ -158,3 +158,8 @@ table.ev-table td { white-space: normal; vertical-align: top; min-width: 150px; 
 .conflict .cf-text { margin: 4px 0 8px; white-space: pre-wrap; color: var(--ink-2); }
 .cf-btns { display: flex; flex-wrap: wrap; gap: 6px; }
 .sheet-badge-img { width: 72px; height: auto; border-radius: 0; background: none; border: 0; box-shadow: none; filter: drop-shadow(0 3px 3px rgba(29,27,75,.2)); }
+.hist-btn { margin-left: 6px; padding: 2px 10px; font-size: .78rem; }
+.hist { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; }
+.hist li { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: #fffefb; }
+.hist li:first-child { border-color: var(--p3); }
+.hist p { margin: 4px 0 8px; white-space: pre-wrap; }

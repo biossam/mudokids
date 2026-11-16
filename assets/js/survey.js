@@ -10,7 +10,7 @@
   var EMBED = q.get("embed") === "1";
   if (EMBED) document.body.classList.add("embed");
   var ME_KEY = "mdk-me-v1", DEV_KEY = "mdk-dev-v1", KEY = "mdk-survey-v1-" + phase;
-  var S, me, ans, items, timer;
+  var S, me, ans, items, timer, warned = "";
 
   function read(k, d) { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } }
   function write(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -103,6 +103,10 @@
         chip(r.submitted ? "다 했어요 ✓" : "선생님과 연결됨 · 자동 저장 중", true);
         if (submit) document.getElementById("status").textContent = "선생님께 보냈어요. 고마워요!";
       })
-      .catch(function (e) { chip(e.status === 409 ? "다른 기기에서 쓰는 번호예요" : "연결 안 됨", false); if (submit || e.status === 409) alert(e.message); });
+      .catch(function (e) {
+        var bad = e.status === 409 || e.status === 422;
+        chip(e.status === 409 ? "다른 기기에서 쓰는 번호예요" : e.status === 422 ? "번호를 확인해요" : "연결 안 됨", false);
+        if (submit || (bad && warned !== me.ban + "-" + me.no)) { warned = me.ban + "-" + me.no; alert(e.message); }
+      });
   }
 })();

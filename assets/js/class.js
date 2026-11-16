@@ -72,7 +72,9 @@
       '<div class="c-top">' +
         '<div class="c-code"><div class="c-codetext"><span>참여 코드</span><b id="code-big">' + esc(c.room) + "</b>" +
           '<p class="small">학생은 <span class="c-url">' + esc(location.host + location.pathname.replace(/[^/]*$/, "")) + 'class.html</span> 에서 코드를 쓰거나 QR을 찍어요.</p>' +
-          '<div class="c-codebtns"><button class="btn ghost small" id="copy">학생 링크 복사</button><button class="btn ghost small" id="big">코드 크게 보기</button></div></div>' +
+          '<div class="c-codebtns"><button class="btn ghost small" id="copy">학생 링크 복사</button><button class="btn ghost small" id="big">코드 크게 보기</button></div>' +
+          '<label class="c-maxno">학생 번호 1번 ~ <input id="maxno" inputmode="numeric" maxlength="2" placeholder="제한 없음" aria-label="가장 큰 학생 번호">번까지</label>' +
+          '<p class="small c-maxno-help">우리 반 번호까지만 쓰게 하면 없는 번호로 들어오는 장난을 막아요.</p></div>' +
           '<div class="c-qr" id="qr" aria-label="학생 링크 QR"></div></div>' +
         '<div class="c-now" id="now"></div>' +
       "</div>" +
@@ -119,6 +121,7 @@
     };
     paintLessons();
     if (SV) paintSurvey();
+    initMaxNo();
     refreshTeacher();
     var tick = 0;
     clearInterval(timer); timer = setInterval(function () { tick++; if (!document.hidden || tick % 3 === 0) refreshTeacher(); }, 5000);
@@ -161,6 +164,18 @@
     });
     document.getElementById("wait").onclick = function () {
       M.push(0, null).then(function () { T.state = Object.assign({}, T.state, { lesson: 0, part: null }); paintLessons(); paintNow(); toast("학생 화면을 대기로 바꿨어요."); }).catch(handleErr);
+    };
+  }
+
+  // ① 학생 번호 범위: 정하면 그 밖의 번호로는 활동지·설문을 저장할 수 없음
+  function initMaxNo() {
+    var input = document.getElementById("maxno");
+    M.call({ action: "check", room: T.c.room, teacher: T.c.teacher }).then(function (r) { if (r.config && r.config.maxNo) input.value = r.config.maxNo; }).catch(function () {});
+    input.onchange = function () {
+      var n = parseInt(input.value.replace(/\D/g, ""), 10) || 0;
+      input.value = n || "";
+      M.call({ action: "config", room: T.c.room, teacher: T.c.teacher, config: { maxNo: n } })
+        .then(function () { toast(n ? "학생 번호를 1~" + n + "번으로 정했어요." : "번호 제한을 없앴어요."); }).catch(handleErr);
     };
   }
 

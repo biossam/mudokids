@@ -98,3 +98,7 @@ body.c-student-page main { flex: 1; display: flex; flex-direction: column; }
 .c-skills { margin: 12px 0 4px; align-items: center; }
 .c-skills .small { margin-left: 4px; }
 .c-choose > * { min-width: 0; } .c-join input { width: 100%; } .c-join .btn { flex: none; }
+.c-maxno { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 12px; font-size: .9rem; font-weight: 500; }
+.c-maxno input { width: 6.5em; padding: 6px 10px; font: inherit; font-weight: 700; border: 1.5px solid var(--line); border-radius: 10px; }
+.c-maxno input:focus { outline: none; border-color: var(--accent); }
+.c-maxno-help { margin: 4px 0 0; }
