@@ -105,3 +105,9 @@ assets/js/class.js      수업하기 동작
 ## 사용법 한 장
 
 `howto.html` — 선생님용 A4 한 장 안내(인쇄·PDF 저장 단추). 운영 안내 탭, 수업하기 소개, 수업하기 첫 화면에서 연결됩니다.
+
+## 휴먼스킬 탭 · 체크리스트 탭
+
+- 휴먼스킬 탭(`index.html#skills`)은 `tools/build_skills.py`가 `data/lessons.json`(차시별 알기·하기·가치), `data/sheets.json`(차시 글자·제목), `data/survey.json`(한 줄 풀이 `desc`, 설문 문항)으로 만듭니다. 지도안 휴먼스킬을 고치면 `python3 tools/build_skills.py`를 다시 실행하세요.
+- 한 줄 풀이(`desc`)는 학생에게 설명하기 쉽게 쓴 것으로, 연구회 공식 정의가 정해지면 `data/survey.json`에서 바꿉니다.
+- 체크리스트 탭: AI 도구 쓰기 전 체크리스트 + 수업하기 체크리스트(수업 전·중·후, 휴먼스킬). 체크 표시는 저장되지 않습니다.

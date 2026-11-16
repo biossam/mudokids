@@ -34,7 +34,7 @@
     document.getElementById("class-tag").textContent = "수업하기";
     app.innerHTML = '<section class="wrap c-home">' +
       '<h1 class="c-h1">무.도.키즈 수업하기</h1>' +
-      '<p class="lead">교실 링크 없이 이 사이트 안에서 바로 수업해요. 선생님이 수업을 열면 6자리 참여 코드가 나오고, 학생은 코드로 들어와 선생님이 띄운 활동지를 써요.</p>' +
+      '<p class="lead">선생님이 수업을 열면 6자리 참여 코드가 나오고, 학생은 코드로 들어와 선생님이 띄운 활동지를 써요.</p>' +
       '<div class="c-choose">' +
         '<div class="c-card"><span class="c-emoji" aria-hidden="true">🧑‍🏫</span><h2>선생님</h2><p>수업을 열고, 활동지를 학생 화면에 띄우고, 링크·파일을 보내요.</p>' +
           '<form id="open-form" class="c-open">' +

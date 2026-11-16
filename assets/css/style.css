@@ -221,3 +221,40 @@ a { color: inherit; }
 .mdk-ask-btns { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
 .btn.danger { background: #d9481c; color: #fff; border-color: var(--ink); }
 .btn.danger:hover { background: #c13d14; }
+
+.check-second { margin-top: 48px; }
+.checks a { color: var(--ink); font-weight: 700; }
+
+/* 휴먼스킬 탭 */
+.sk-map { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; margin: 18px 0 6px; }
+.sk-row { display: grid; grid-template-columns: minmax(120px, 1.6fr) repeat(10, minmax(30px, 1fr)); align-items: center; min-width: 520px; border-top: 1px dashed var(--line); }
+.sk-row:first-child { border-top: 0; }
+.sk-row > * { padding: 7px 4px; text-align: center; font-size: .9rem; }
+.sk-row > :first-child { text-align: left; font-weight: 700; color: var(--ink); text-decoration: none; }
+.sk-row a[role=rowheader]:hover { color: var(--accent); }
+.sk-head a { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--ink); text-decoration: none; line-height: 1; }
+.sk-head a small { display: block; font-family: var(--font-body); font-size: .65rem; color: var(--muted); font-weight: 500; }
+.sk-head a.p1 { color: var(--p1); } .sk-head a.p2 { color: var(--p2); } .sk-head a.p3 { color: var(--p3); }
+.sk-row span.p1 { color: var(--p1); } .sk-row span.p2 { color: var(--p2); } .sk-row span.p3 { color: var(--p3); }
+.sk-cards { display: grid; gap: 10px; margin-top: 22px; }
+.sk-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.sk-card[open] { border-color: var(--ink); }
+.sk-card summary { cursor: pointer; padding: 14px 18px; display: grid; gap: 4px; list-style: none; }
+.sk-card summary::-webkit-details-marker { display: none; }
+.sk-card summary b { font-size: 1.05rem; }
+.sk-know { color: var(--ink-2); font-size: .9rem; }
+.sk-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.sk-chip { font-size: .75rem; font-weight: 700; border-radius: 99px; padding: 2px 10px; background: var(--soft); border: 1px solid var(--line); }
+.sk-chip.p1 { color: #c4501b; } .sk-chip.p2 { color: #1f73c2; } .sk-chip.p3 { color: #13824f; }
+.sk-body { padding: 0 18px 16px; display: grid; gap: 12px; }
+.sk-lesson { border-top: 1px dashed var(--line); padding-top: 10px; }
+.sk-lesson h4 { margin: 0 0 6px; font-size: .95rem; }
+.sk-lesson h4 a { color: var(--ink); }
+.sk-lesson dl { display: grid; grid-template-columns: 44px 1fr; gap: 4px 8px; margin: 0; font-size: .9rem; color: var(--ink-2); }
+.sk-lesson dt { font-weight: 700; color: var(--ink); }
+.sk-lesson dd { margin: 0; }
+.sk-survey { margin: 0; font-size: .85rem; color: var(--muted); }
+.sk-how { margin-top: 28px; background: var(--soft); border-radius: var(--radius); padding: 16px 22px; }
+.sk-how h3 { margin: 0 0 8px; font-family: var(--font-display); font-size: 1.4rem; }
+.sk-how ul { margin: 0; padding-left: 20px; color: var(--ink-2); }
+.sk-how li { margin: 4px 0; }
