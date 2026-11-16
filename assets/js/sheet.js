@@ -84,7 +84,7 @@
         '<label>모둠<input data-me="group" maxlength="2" inputmode="numeric" value="' + esc(me.group || "") + '" placeholder="숫자"></label>' +
         '<label class="me-name">이름<input data-me="name" maxlength="20" value="' + esc(me.name || "") + '" placeholder="그림 저장용"></label>' +
         (liveOn() ? '<span class="live-chip" id="chip">연결 안 됨</span>' : "") +
-        (liveOn() ? '<p class="me-help">' + (inClass() ? "반·번호·모둠을 쓰면 쓰는 내용이 선생님 화면에 자동으로 저장돼요." : "교실 링크 참여 코드와 반·번호를 쓰면 쓰는 내용이 선생님 화면에 자동으로 저장돼요.") + " 이름은 이 기기에만 남아요.</p>" : "") +
+        (liveOn() ? '<p class="me-help">' + (inClass() ? "반·번호·모둠을 쓰면 쓰는 내용이 선생님 화면에 자동으로 저장돼요." : "참여 코드와 반·번호를 쓰면 쓰는 내용이 선생님 화면에 자동으로 저장돼요.") + " 이름은 이 기기에만 남아요.</p>" : "") +
       "</section>" +
       lesson.parts.map(partHtml).join("") +
       '<section class="sheet-foot">' +

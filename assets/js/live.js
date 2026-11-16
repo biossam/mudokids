@@ -44,7 +44,7 @@
         '<button class="btn ghost small" id="reset">이 차시 기록 지우기</button></div>' : "") +
       "</section>";
     if (!conn.room || !conn.key) {
-      app.innerHTML = head + '<section class="connect"><p><b>교실 링크 교사 화면 → 무.도.키즈 활동지 탭 → 실시간 현황</b>을 누르면 자동으로 연결돼요. ' +
+      app.innerHTML = head + '<section class="connect"><p><b>수업하기 → 실시간 현황</b>으로 열면 자동으로 연결돼요. ' +
         "선생님 연결 키는 이 탭에만 보관되고, 탭을 닫으면 지워져요.</p></section>";
       return;
     }
@@ -74,7 +74,7 @@
         failCount++;
         var board = document.getElementById("board");
         if (e.status === 403 || e.status === 404) {
-          board.innerHTML = '<section class="connect"><p>' + esc(e.message) + " 수업이 끝났다면 교실 링크에서 새 수업을 열고 다시 들어와 주세요.</p></section>";
+          board.innerHTML = '<section class="connect"><p>' + esc(e.message) + " 수업이 끝났다면 수업하기에서 새 수업을 열어 주세요.</p></section>";
           return;
         }
         var meta = document.getElementById("meta");

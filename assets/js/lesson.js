@@ -122,7 +122,7 @@
   function sheetUrl(pi) { return "sheet.html?l=" + base.no + "&embed=1" + (pi != null ? "#p" + pi : ""); }
 
   function sheetPane() {
-    return '<div class="sheet-intro"><p>학생이 화면에서 바로 쓰는 활동지예요. 교실 링크 <b>무.도.키즈 활동지</b> 탭에서 <b>학생에게 보내기</b>를 누르면 참여 코드가 들어간 링크가 학생에게 가고, 쓰는 내용이 <b>실시간 현황</b>에 모여요.</p>' +
+    return '<div class="sheet-intro"><p>학생이 화면에서 바로 쓰는 활동지예요. <b>수업하기</b>에서 학생 화면에 띄우면 쓰는 내용이 <b>실시간 현황</b>에 모여요.</p>' +
       '<p class="small">여기서 써 보는 내용은 이 기기에만 저장돼요. <a href="sheet.html?l=' + base.no + '" target="_blank" rel="noopener">새 창으로 열기</a></p></div>' +
       '<iframe class="sheet-frame" id="sheet-frame" src="' + sheetUrl() + '" title="' + base.no + '차시 활동지"></iframe>';
   }
@@ -162,7 +162,7 @@
       "</tbody></table></div>" +
       '<h2 class="g-title">수업 준비 메모</h2><ul class="cautions">' + info.prep.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" +
       (info.links.length ? '<h2 class="g-title">수업 자료 링크</h2><ul class="cautions">' + info.links.map(function (x) { return '<li><a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.label) + "</a></li>"; }).join("") + "</ul>" : "") +
-      '<p class="small" style="margin-top:24px">실시간 현황은 교실 링크 교사 화면 → 무.도.키즈 활동지 탭 → 실시간 현황으로 열어야 학생 기록과 연결돼요.</p>';
+      "";
   }
 
   /* ── 수업 모드 ── */

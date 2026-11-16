@@ -34,7 +34,6 @@
     document.getElementById("class-tag").textContent = "수업하기";
     app.innerHTML = '<section class="wrap c-home">' +
       '<h1 class="c-h1">무.도.키즈 수업하기</h1>' +
-      '<p class="lead">선생님이 수업을 열면 6자리 참여 코드가 나오고, 학생은 코드로 들어와 선생님이 띄운 활동지를 써요.</p>' +
       '<div class="c-choose">' +
         '<div class="c-card"><span class="c-emoji" aria-hidden="true">🧑‍🏫</span><h2>선생님</h2><p>수업을 열고, 활동지를 학생 화면에 띄우고, 링크·파일을 보내요.</p>' +
           '<form id="open-form" class="c-open">' +
@@ -47,7 +46,6 @@
         '<div class="c-card"><span class="c-emoji" aria-hidden="true">🙋</span><h2>학생</h2><p>선생님께 받은 참여 코드를 써요.</p>' +
           '<form id="join" class="c-join"><input id="code" maxlength="6" autocapitalize="characters" autocomplete="off" placeholder="참여 코드" aria-label="참여 코드"><button class="btn primary">들어가기</button></form></div>' +
       "</div>" +
-      '<p class="small">수업은 선생님이 끝내거나, 선생님 창이 3시간 넘게 닫혀 있거나, 연 지 12시간이 지나면 자동으로 닫히고 기록과 보낸 파일이 모두 지워져요. 학생 화면 공유 기능은 없어요.</p>' +
       "</section>";
     try { document.getElementById("t-name").value = localStorage.getItem(NAME_KEY) || ""; } catch (e) {}
     document.getElementById("open-form").onsubmit = function (e) {
@@ -113,11 +111,11 @@
             : '<label class="c-file"><input type="file" id="file"><span class="btn ghost small">파일 보내기 (8 MB 이하)</span></label>') +
           '<ul class="c-shares" id="shares"></ul></section>' +
       "</div>" +
-      (SV ? '<section class="c-panel c-survey"><h2>휴먼스킬 설문</h2><p class="small">프로젝트 시작 전(1차시 앞)에 <b>사전</b>, 끝난 뒤(10차시 끝)에 <b>사후</b> 설문을 한 번씩 띄워요. 이번 수업에서 키운 휴먼스킬만 골라 보낼 수 있어요. 기록은 12시간 뒤 지워지니 사전 설문 뒤 <b>설문 결과 → CSV 받기</b>로 꼭 받아 두세요.</p>' +
+      (SV ? '<section class="c-panel c-survey"><h2>휴먼스킬 설문</h2><p class="small">1차시 전에 <b>사전</b>, 10차시 뒤에 <b>사후</b> 설문을 띄워요. 사전 설문 뒤 <b>설문 결과 → CSV 받기</b>로 받아 두세요.</p>' +
         '<div class="chips c-skills" id="skills"></div>' +
         '<div class="c-partbtns"><button type="button" class="btn ghost small" id="sv-pre">사전 설문 띄우기</button><button type="button" class="btn ghost small" id="sv-post">사후 설문 띄우기</button>' +
         '<a class="btn ghost small" id="sv-res" target="_blank" rel="noopener">설문 결과 ↗</a></div></section>' : "") +
-      '<div class="c-end"><span class="small">수업을 끝내면 학생 기록과 보낸 파일이 모두 지워져요. 끝내기 전에 실시간 현황에서 CSV를 받아 두세요.</span><button class="btn ghost" id="end">수업 끝내기</button></div>' +
+      '<div class="c-end"><span class="small">끝내기 전에 실시간 현황에서 CSV를 받아 두세요.</span><button class="btn ghost" id="end">수업 끝내기</button></div>' +
       "</section>" +
       '<div class="c-bigcode" id="bigcode" hidden><div><span>참여 코드</span><b>' + esc(c.room) + '</b><div id="qr2"></div><p>' + esc(studentLink(c.room).replace(/^https?:\/\//, "")) + '</p><button class="btn primary" id="closebig">닫기</button></div></div>';
     drawQr("qr", 4); drawQr("qr2", 7);
