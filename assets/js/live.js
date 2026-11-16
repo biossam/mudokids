@@ -60,8 +60,9 @@
     };
     app.querySelector("#csv").onclick = csv;
     app.querySelector("#reset").onclick = function () {
-      if (!confirm(lesson.no + "차시 활동지 기록을 모두 지울까요? 학생 기기에 쓴 내용은 남아 있어요.")) return;
-      M.call({ action: "reset", room: conn.room, teacher: conn.key, lesson: M.serverLesson(lesson.no) }).then(poll, function (e) { alert(e.message); });
+      M.ask(lesson.no + "차시 활동지 기록을 모두 지울까요?\n학생 기기에 쓴 내용은 남아 있어요.", "기록 지우기", true).then(function (ok) {
+        if (ok) M.call({ action: "reset", room: conn.room, teacher: conn.key, lesson: M.serverLesson(lesson.no) }).then(poll, function (e) { alert(e.message); });
+      });
     };
   }
 
@@ -348,7 +349,7 @@
       evalSave(store);
     };
     board.querySelector("#ev-redo").onclick = function () { paintEval(board); };
-    board.querySelector("#ev-reset").onclick = function () { if (confirm("고친 수준과 피드백을 모두 자동 초안으로 되돌릴까요?")) { evalSave({}); paintEval(board); } };
+    board.querySelector("#ev-reset").onclick = function () { M.ask("고친 수준과 피드백을 모두 자동 초안으로 되돌릴까요?", "되돌리기").then(function (ok) { if (ok) { evalSave({}); paintEval(board); } }); };
     board.querySelector("#ai-copy").onclick = function () {
       var t = aiPrompt(R);
       (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { alert("프롬프트를 복사했어요. 학교에서 허락된 AI 대화창에 붙여 넣으세요.\n(학생 " + R.length + "명 · " + t.length + "자)"); }, function () { prompt("프롬프트", t); });

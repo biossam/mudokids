@@ -71,8 +71,8 @@
       }
       if (e.target.id === "submit") {
         var left = items.filter(function (it) { return !ans[it.id]; }).length;
-        if (left && !confirm("아직 " + left + "문항이 남았어요. 그래도 낼까요?")) return;
-        sync(true);
+        if (!left) return sync(true);
+        M.ask("아직 " + left + "문항이 남았어요. 그래도 낼까요?", "그래도 내기").then(function (ok) { if (ok) sync(true); });
       }
     });
     app.addEventListener("input", function (e) {

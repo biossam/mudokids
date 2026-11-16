@@ -43,7 +43,7 @@
             '<button class="btn primary" id="open">수업 열기</button></form>' +
           '<p class="small c-ask">초대 코드가 없으신가요? <a href="#" id="ask">초대 코드 요청하기</a></p>' +
           '<div class="c-demo"><button type="button" class="btn ghost small" id="demo">시연용 수업 열기</button> <a class="btn ghost small" href="howto.html" target="_blank" rel="noopener">사용법 한 장</a>' +
-          '<p class="small">시연용은 코드 없이 바로 열려요. 1시간 뒤 닫히고, 파일은 보낼 수 없고, 링크는 성장 MAP·무.도.키즈만 보낼 수 있어요.</p></div></div>' +
+          '<p class="small">시연용은 코드 없이 바로 열려요. 1시간 뒤 닫히고, 파일은 보낼 수 없고, 링크는 무.도.키즈 주소만 보낼 수 있어요.</p></div></div>' +
         '<div class="c-card"><span class="c-emoji" aria-hidden="true">🙋</span><h2>학생</h2><p>선생님께 받은 참여 코드를 써요.</p>' +
           '<form id="join" class="c-join"><input id="code" maxlength="6" autocapitalize="characters" autocomplete="off" placeholder="참여 코드" aria-label="참여 코드"><button class="btn primary">들어가기</button></form></div>' +
       "</div>" +
@@ -109,7 +109,7 @@
           '<div class="c-lessons" id="lessons"></div><div id="parts"></div></section>' +
         '<section class="c-panel"><h2>자료 보내기</h2>' +
           '<form id="link" class="c-form"><input id="ltitle" placeholder="제목 (예: 4차시 위로 영상)" maxlength="80"><input id="lurl" placeholder="https://로 시작하는 링크" inputmode="url"><button class="btn primary small">링크 보내기</button></form>' +
-          (c.demo ? '<p class="small c-demonote">시연용 수업이라 파일은 보낼 수 없고, 링크는 성장 MAP·무.도.키즈만 보낼 수 있어요.</p>'
+          (c.demo ? '<p class="small c-demonote">시연용 수업이라 파일은 보낼 수 없고, 링크는 무.도.키즈 주소만 보낼 수 있어요.</p>'
             : '<label class="c-file"><input type="file" id="file"><span class="btn ghost small">파일 보내기 (8 MB 이하)</span></label>') +
           '<ul class="c-shares" id="shares"></ul></section>' +
       "</div>" +
@@ -265,10 +265,17 @@
   }
 
   function endClass() {
-    if (!confirm("수업을 끝낼까요?\n학생 활동지 기록과 보낸 파일이 모두 지워져요. CSV를 받아 두었는지 확인해 주세요.")) return;
-    M.call({ action: "end", room: T.c.room, teacher: T.c.teacher }, "/api/mdk").then(function () {
-      clearInterval(timer); M.saveClass(null); toast("수업을 끝냈어요."); home();
-    }).catch(function (e) { if (e.status === 404) { M.saveClass(null); home(); } else toast(e.message); });
+    M.ask("수업을 끝낼까요?\n학생 활동지 기록과 보낸 파일이 모두 지워져요. CSV를 받아 두었는지 확인해 주세요.", "수업 끝내기", true).then(function (ok) {
+      if (!ok) return;
+      var btn = document.getElementById("end"); if (btn) { btn.disabled = true; btn.textContent = "끝내는 중…"; }
+      M.call({ action: "end", room: T.c.room, teacher: T.c.teacher }, "/api/mdk").then(function () {
+        clearInterval(timer); M.saveClass(null); toast("수업을 끝냈어요."); home();
+      }).catch(function (e) {
+        if (e.status === 404 || e.status === 403) { clearInterval(timer); M.saveClass(null); toast("이미 닫힌 수업이에요."); home(); return; }
+        if (btn) { btn.disabled = false; btn.textContent = "수업 끝내기"; }
+        toast(e.message + " 다시 눌러 주세요.");
+      });
+    });
   }
 
   /* ───────── 학생 화면 ───────── */

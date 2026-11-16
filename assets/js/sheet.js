@@ -224,13 +224,14 @@
       }
       if (e.target.id === "submit") {
         var left = leftParts();
-        if (left.length && !confirm("아직 빈칸이 있어요.\n" + left.join("\n") + "\n\n그래도 다 했다고 보낼까요?")) return;
-        return sync(true);
+        if (!left.length) return sync(true);
+        return M.ask("아직 빈칸이 있어요.\n" + left.join("\n") + "\n\n그래도 다 했다고 보낼까요?", "다 했어요").then(function (ok) { if (ok) sync(true); });
       }
       if (e.target.id === "save-img") return saveImage();
       if (e.target.id === "clear") {
-        if (!confirm("이 활동지에 쓴 내용을 이 기기에서 모두 지울까요?")) return;
-        state = { fields: {}, gv: {}, dirty: {}, by: {}, submitted: false }; save(); render();
+        return M.ask("이 활동지에 쓴 내용을 이 기기에서 모두 지울까요?", "모두 지우기", true).then(function (ok) {
+          if (ok) { state = { fields: {}, gv: {}, dirty: {}, by: {}, submitted: false }; save(); render(); }
+        });
       }
     });
   }

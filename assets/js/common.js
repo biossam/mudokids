@@ -14,6 +14,26 @@
   // CSV 칸: =, +, -, @ 로 시작하면 엑셀이 수식으로 실행하므로 앞에 ' 를 붙임
   M.csvCell = function (c) { c = String(c == null ? "" : c); if (/^[=+\-@\t\r]/.test(c)) c = "'" + c; return '"' + c.replace(/"/g, '""') + '"'; };
 
+  // 확인 창: 브라우저 confirm()은 앱 안 브라우저·학교 관리 기기에서 막히거나 바로 '취소'되어
+  // 단추가 아무 일도 안 하는 것처럼 보이므로, 페이지 안에 직접 그림. 고르면 true/false로 끝나는 Promise
+  M.ask = function (message, okLabel, danger) {
+    return new Promise(function (resolve) {
+      var prev = document.activeElement;
+      var wrap = document.createElement("div");
+      wrap.className = "mdk-ask";
+      wrap.innerHTML = '<div class="mdk-ask-card" role="alertdialog" aria-modal="true" aria-labelledby="mdk-ask-msg">' +
+        '<p id="mdk-ask-msg">' + M.esc(message).replace(/\n/g, "<br>") + "</p>" +
+        '<div class="mdk-ask-btns"><button type="button" class="btn ghost" data-a="0">취소</button>' +
+        '<button type="button" class="btn ' + (danger ? "danger" : "primary") + '" data-a="1">' + M.esc(okLabel || "확인") + "</button></div></div>";
+      var done = function (v) { document.removeEventListener("keydown", key, true); wrap.remove(); if (prev && prev.focus) prev.focus(); resolve(v); };
+      var key = function (e) { if (e.key === "Escape") { e.preventDefault(); done(false); } };
+      wrap.addEventListener("click", function (e) { var b = e.target.closest("[data-a]"); if (b) done(b.dataset.a === "1"); else if (e.target === wrap) done(false); });
+      document.addEventListener("keydown", key, true);
+      document.body.appendChild(wrap);
+      wrap.querySelector('[data-a="1"]').focus();
+    });
+  };
+
   M.load = function () {
     return fetch("data/sheets.json", { cache: "no-cache" }).then(function (r) {
       if (!r.ok) throw new Error("활동지 자료를 불러오지 못했어요.");
