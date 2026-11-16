@@ -197,7 +197,7 @@
   function paintShares(items) {
     var ul = document.getElementById("shares"); if (!ul) return;
     ul.innerHTML = (items || []).length ? items.map(function (s) {
-      return '<li><span class="c-stype">' + (s.type === "file" ? "파일" : "링크") + '</span><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a><button type="button" class="c-del" data-id="' + s.id + '" aria-label="지우기">지우기</button></li>';
+      return '<li><span class="c-stype">' + (s.type === "file" ? "파일" : "링크") + '</span><a href="' + esc(M.safeUrl(s.url)) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a><button type="button" class="c-del" data-id="' + s.id + '" aria-label="지우기">지우기</button></li>';
     }).join("") : '<li class="small">아직 보낸 자료가 없어요.</li>';
     ul.onclick = function (e) {
       var b = e.target.closest(".c-del"); if (!b) return;
@@ -292,7 +292,7 @@
     var shares = r.shares || [];
     document.getElementById("s-count").textContent = shares.length;
     document.getElementById("s-list").innerHTML = shares.length ? shares.map(function (s) {
-      return '<li><span class="c-stype">' + (s.type === "file" ? "파일" : "링크") + '</span><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + "</a></li>";
+      return '<li><span class="c-stype">' + (s.type === "file" ? "파일" : "링크") + '</span><a href="' + esc(M.safeUrl(s.url)) + '" target="_blank" rel="noopener">' + esc(s.title) + "</a></li>";
     }).join("") : '<li class="small">아직 받은 자료가 없어요.</li>';
     var ids = shares.map(function (s) { return s.id; }).join(",");
     if (seenShares !== null && ids !== seenShares && shares.length && (!seenShares || shares[0].id > Number(seenShares.split(",")[0] || 0))) {

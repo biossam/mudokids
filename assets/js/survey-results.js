@@ -129,7 +129,7 @@
         used.map(function (sk) { var x = skillScore(b, sk); return x == null ? "" : x.toFixed(2); }),
         itemIds.map(function (id) { return a[id] || ""; }), itemIds.map(function (id) { return b[id] || ""; }), [a.open || "", b.open || ""]));
     });
-    var text = "﻿" + rows.map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(","); }).join("\r\n");
+    var text = "﻿" + rows.map(function (r) { return r.map(M.csvCell).join(","); }).join("\r\n");
     var el = document.createElement("a"); el.href = URL.createObjectURL(new Blob([text], { type: "text/csv;charset=utf-8" }));
     el.download = "무도키즈_휴먼스킬설문_" + conn.room + ".csv"; el.click();
   }

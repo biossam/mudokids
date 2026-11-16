@@ -9,6 +9,11 @@
     });
   };
 
+  // 링크는 http(s)만 (javascript: 같은 주소로 사이트 안에서 코드가 돌지 않게)
+  M.safeUrl = function (u) { u = String(u || "").trim(); return /^https?:\/\//i.test(u) ? u : "#"; };
+  // CSV 칸: =, +, -, @ 로 시작하면 엑셀이 수식으로 실행하므로 앞에 ' 를 붙임
+  M.csvCell = function (c) { c = String(c == null ? "" : c); if (/^[=+\-@\t\r]/.test(c)) c = "'" + c; return '"' + c.replace(/"/g, '""') + '"'; };
+
   M.load = function () {
     return fetch("data/sheets.json", { cache: "no-cache" }).then(function (r) {
       if (!r.ok) throw new Error("활동지 자료를 불러오지 못했어요.");
@@ -16,10 +21,11 @@
     }).then(function (data) {
       M.data = data;
       M.live = data.live || {};
-      // 주소에 ?server=... 를 붙이면 다른 교실 링크 서버로 (시험용)
+      // 주소에 ?server=... 를 붙이면 다른 교실 링크 서버로 (시험용).
+      // 이 컴퓨터 안의 시험 서버(localhost)만 됨 — 남이 만든 주소로 학생 답을 빼돌리거나 가짜 자료를 띄우지 못하게
       var q = new URLSearchParams(location.search);
       var s = q.get("server");
-      if (s && /^https?:\/\//.test(s)) M.live.url = s.replace(/\/$/, "") + "/api/snja";
+      if (s && /^http:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?\/?$/.test(s)) M.live.url = s.replace(/\/$/, "") + "/api/snja";
       return data;
     });
   };

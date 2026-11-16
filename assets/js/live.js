@@ -356,7 +356,7 @@
       var ev = r ? r.final.concat(r.evs.map(function (e) { return e.why + (e.best ? " / " + short(e.best, 40) : ""); }), [r.fb]) : [];
       rows.push([s.ban, s.no, s.group || "", s.submitted ? "O" : ""].concat(ev, cols.map(function (f) { return M.show(s.fields[f.key]); })));
     });
-    var text = "﻿" + rows.map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(","); }).join("\r\n");
+    var text = "﻿" + rows.map(function (r) { return r.map(M.csvCell).join(","); }).join("\r\n");
     var a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([text], { type: "text/csv;charset=utf-8" }));
     a.download = "무도키즈_" + lesson.no + "차시_" + conn.room + ".csv"; a.click();
