@@ -57,7 +57,15 @@
 
   // 무.도.키즈 간단 교실: 이 기기에서 연 수업 (선생님)
   var CLASS_KEY = "mdk-class-v1";
-  M.myClass = function () { try { var c = JSON.parse(localStorage.getItem(CLASS_KEY)); return c && c.room && c.teacher ? c : null; } catch (e) { return null; } };
+  // 수업은 12시간이면 서버에서 닫히므로, 그보다 오래된 선생님 키는 기기에서도 지움 (공용 기기에서 다음 사람이 쓰지 못하게)
+  M.myClass = function () {
+    try {
+      var c = JSON.parse(localStorage.getItem(CLASS_KEY));
+      if (!c || !c.room || !c.teacher) return null;
+      if (c.createdAt && Date.now() / 1000 - c.createdAt > 12 * 3600) { localStorage.removeItem(CLASS_KEY); return null; }
+      return c;
+    } catch (e) { return null; }
+  };
   M.saveClass = function (c) { try { if (c) localStorage.setItem(CLASS_KEY, JSON.stringify(c)); else localStorage.removeItem(CLASS_KEY); } catch (e) {} };
   M.push = function (lesson, part, opt) {
     var c = M.myClass(); if (!c) return Promise.reject(new Error("열린 수업이 없어요."));
