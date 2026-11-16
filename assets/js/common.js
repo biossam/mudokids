@@ -62,7 +62,8 @@
     try {
       var c = JSON.parse(localStorage.getItem(CLASS_KEY));
       if (!c || !c.room || !c.teacher) return null;
-      if (c.createdAt && Date.now() / 1000 - c.createdAt > 12 * 3600) { localStorage.removeItem(CLASS_KEY); return null; }
+      var until = c.expiresAt || (c.createdAt ? c.createdAt + 12 * 3600 : 0);
+      if (until && Date.now() / 1000 > until) { localStorage.removeItem(CLASS_KEY); return null; }
       return c;
     } catch (e) { return null; }
   };

@@ -80,7 +80,7 @@
     if (btn) { btn.disabled = true; btn.textContent = "여는 중…"; }
     M.call(body, "/api/mdk").then(function (r) {
       var codeIn = document.getElementById("t-code"); if (codeIn) codeIn.value = "";
-      var c = { room: r.room, teacher: r.teacher, createdAt: r.createdAt, demo: !!r.demo, lesson: Number(q.get("l")) || 1 };
+      var c = { room: r.room, teacher: r.teacher, createdAt: r.createdAt, expiresAt: r.expiresAt, demo: !!r.demo, lesson: Number(q.get("l")) || 1 };
       M.saveClass(c); teacher(c);
       var l = Number(q.get("l")); if (l) M.push(l, null).then(function () { refreshTeacher(); });
     }).catch(function (e) {
@@ -254,7 +254,8 @@
   }
 
   function handleErr(e) {
-    if (e.status === 404 || e.status === 403) {
+    // 수업이 없어졌거나(404) 선생님 키가 안 맞을 때(403 '키')만 닫힘 화면. 시연용에서 막힌 링크(403) 같은 건 알림만
+    if (e.status === 404 || (e.status === 403 && /키/.test(e.message || ""))) {
       clearInterval(timer); M.saveClass(null);
       app.innerHTML = '<section class="wrap c-home"><h1 class="c-h1">수업이 닫혔어요</h1><p class="lead">' + esc(e.message) + ' 수업이 끝났거나 오래되어 자동으로 닫혔어요.</p><button class="btn primary" id="again">새 수업 열기</button></section>';
       document.getElementById("again").onclick = function () { home(); };
