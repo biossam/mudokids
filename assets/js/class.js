@@ -37,13 +37,36 @@
       '<p class="lead">교실 링크 없이 이 사이트 안에서 바로 수업해요. 선생님이 수업을 열면 6자리 참여 코드가 나오고, 학생은 코드로 들어와 선생님이 띄운 활동지를 써요.</p>' +
       '<div class="c-choose">' +
         '<div class="c-card"><span class="c-emoji" aria-hidden="true">🧑‍🏫</span><h2>선생님</h2><p>수업을 열고, 활동지를 학생 화면에 띄우고, 링크·파일을 보내요.</p>' +
-          '<button class="btn primary" id="open">수업 열기</button> <a class="btn ghost" href="howto.html" target="_blank" rel="noopener">사용법 한 장</a></div>' +
+          '<form id="open-form" class="c-open">' +
+            '<label>선생님 이름<input id="t-name" maxlength="30" autocomplete="name" placeholder="초대 코드를 받을 때 쓴 이름"></label>' +
+            '<label>초대 코드<input id="t-code" type="password" inputmode="numeric" autocomplete="off" placeholder="받은 8자리 숫자"></label>' +
+            '<button class="btn primary" id="open">수업 열기</button></form>' +
+          '<p class="small c-ask">초대 코드가 없으신가요? <a href="#" id="ask">초대 코드 요청하기</a></p>' +
+          '<div class="c-demo"><button type="button" class="btn ghost small" id="demo">시연용 수업 열기</button> <a class="btn ghost small" href="howto.html" target="_blank" rel="noopener">사용법 한 장</a>' +
+          '<p class="small">시연용은 코드 없이 바로 열려요. 1시간 뒤 닫히고, 파일은 보낼 수 없고, 링크는 성장 MAP·무.도.키즈만 보낼 수 있어요.</p></div></div>' +
         '<div class="c-card"><span class="c-emoji" aria-hidden="true">🙋</span><h2>학생</h2><p>선생님께 받은 참여 코드를 써요.</p>' +
           '<form id="join" class="c-join"><input id="code" maxlength="6" autocapitalize="characters" autocomplete="off" placeholder="참여 코드" aria-label="참여 코드"><button class="btn primary">들어가기</button></form></div>' +
       "</div>" +
       '<p class="small">수업은 선생님이 끝내거나, 선생님 창이 3시간 넘게 닫혀 있거나, 연 지 12시간이 지나면 자동으로 닫히고 기록과 보낸 파일이 모두 지워져요. 학생 화면 공유 기능은 없어요.</p>' +
       "</section>";
-    document.getElementById("open").onclick = openClass;
+    try { document.getElementById("t-name").value = localStorage.getItem(NAME_KEY) || ""; } catch (e) {}
+    document.getElementById("open-form").onsubmit = function (e) {
+      e.preventDefault();
+      var name = document.getElementById("t-name").value.trim(), code = document.getElementById("t-code").value.trim();
+      if (!name) return toast("선생님 이름을 써 주세요.");
+      if (!/^\d{4,}$/.test(code)) return toast("초대 코드를 숫자로 써 주세요.");
+      try { localStorage.setItem(NAME_KEY, name); } catch (er) {}
+      openClass({ action: "create", name: name, code: code });
+    };
+    document.getElementById("demo").onclick = function () { openClass({ action: "create", demo: true }); };
+    document.getElementById("ask").onclick = function (e) {
+      e.preventDefault();
+      // 주소를 화면 글자로 두지 않고 누를 때 만들어 자동 수집을 줄임
+      var to = ["classlink", "biossam.kr"].join("@");
+      var body = "수업 열 때 쓸 이름(띄어쓰기 그대로): \n학교: \n쓰려는 수업: 무.도.키즈 RUNNING MAN\n";
+      location.href = "mailto:" + to + "?subject=" + encodeURIComponent("무.도.키즈 · 교실 링크 초대 코드 요청") + "&body=" + encodeURIComponent(body);
+      this.textContent = to + " (메일이 안 열리면 이 주소로 보내 주세요)";
+    };
     document.getElementById("join").onsubmit = function (e) {
       e.preventDefault(); var c = cleanCode(document.getElementById("code").value);
       if (c.length !== 6) return toast("참여 코드 6자리를 써 주세요.");
@@ -51,15 +74,18 @@
     };
   }
 
-  function openClass() {
-    var btn = document.getElementById("open"); if (btn) { btn.disabled = true; btn.textContent = "여는 중…"; }
-    M.call({ action: "create" }, "/api/mdk").then(function (r) {
-      var c = { room: r.room, teacher: r.teacher, createdAt: r.createdAt, lesson: Number(q.get("l")) || 1 };
+  var NAME_KEY = "mdk-teacher-name";
+  function openClass(body) {
+    var btn = document.getElementById(body.demo ? "demo" : "open"), label = btn ? btn.textContent : "";
+    if (btn) { btn.disabled = true; btn.textContent = "여는 중…"; }
+    M.call(body, "/api/mdk").then(function (r) {
+      var codeIn = document.getElementById("t-code"); if (codeIn) codeIn.value = "";
+      var c = { room: r.room, teacher: r.teacher, createdAt: r.createdAt, demo: !!r.demo, lesson: Number(q.get("l")) || 1 };
       M.saveClass(c); teacher(c);
       var l = Number(q.get("l")); if (l) M.push(l, null).then(function () { refreshTeacher(); });
     }).catch(function (e) {
-      if (btn) { btn.disabled = false; btn.textContent = "수업 열기"; }
-      toast(e.message + (/잠|깨/.test(e.message) ? "" : " (서버가 잠들어 있으면 1분쯤 뒤에 다시 눌러 주세요.)"));
+      if (btn) { btn.disabled = false; btn.textContent = label; }
+      toast(e.message + (e.status && e.status < 500 ? "" : " (서버가 잠들어 있으면 1분쯤 뒤에 다시 눌러 주세요.)"));
     });
   }
 
@@ -67,7 +93,7 @@
   var T = { state: null, sel: 1 };
   function teacher(c) {
     T.c = c; T.sel = c.lesson || 1;
-    document.getElementById("class-tag").innerHTML = "선생님 · <b>" + esc(c.room) + "</b>";
+    document.getElementById("class-tag").innerHTML = (c.demo ? "시연용 · " : "선생님 · ") + "<b>" + esc(c.room) + "</b>";
     app.innerHTML = '<section class="wrap c-teacher">' +
       '<div class="c-top">' +
         '<div class="c-code"><div class="c-codetext"><span>참여 코드</span><b id="code-big">' + esc(c.room) + "</b>" +
@@ -83,7 +109,8 @@
           '<div class="c-lessons" id="lessons"></div><div id="parts"></div></section>' +
         '<section class="c-panel"><h2>자료 보내기</h2>' +
           '<form id="link" class="c-form"><input id="ltitle" placeholder="제목 (예: 4차시 위로 영상)" maxlength="80"><input id="lurl" placeholder="https://로 시작하는 링크" inputmode="url"><button class="btn primary small">링크 보내기</button></form>' +
-          '<label class="c-file"><input type="file" id="file"><span class="btn ghost small">파일 보내기 (8 MB 이하)</span></label>' +
+          (c.demo ? '<p class="small c-demonote">시연용 수업이라 파일은 보낼 수 없고, 링크는 성장 MAP·무.도.키즈만 보낼 수 있어요.</p>'
+            : '<label class="c-file"><input type="file" id="file"><span class="btn ghost small">파일 보내기 (8 MB 이하)</span></label>') +
           '<ul class="c-shares" id="shares"></ul></section>' +
       "</div>" +
       (SV ? '<section class="c-panel c-survey"><h2>휴먼스킬 설문</h2><p class="small">프로젝트 시작 전(1차시 앞)에 <b>사전</b>, 끝난 뒤(10차시 끝)에 <b>사후</b> 설문을 한 번씩 띄워요. 이번 수업에서 키운 휴먼스킬만 골라 보낼 수 있어요. 기록은 12시간 뒤 지워지니 사전 설문 뒤 <b>설문 결과 → CSV 받기</b>로 꼭 받아 두세요.</p>' +
@@ -109,7 +136,7 @@
         document.getElementById("lurl").value = ""; document.getElementById("ltitle").value = ""; paintShares(r.shares); toast("링크를 보냈어요.");
       }).catch(function (er) { toast(er.message); });
     };
-    document.getElementById("file").onchange = function () {
+    if (document.getElementById("file")) document.getElementById("file").onchange = function () {
       var f = this.files[0]; if (!f) return;
       if (f.size > 8 * 1024 * 1024) { this.value = ""; return toast("파일은 8 MB 이하로 보내 주세요."); }
       var fd = new FormData(); fd.append("room", c.room); fd.append("teacher", c.teacher); fd.append("file", f);
@@ -230,7 +257,7 @@
     if (e.status === 404 || e.status === 403) {
       clearInterval(timer); M.saveClass(null);
       app.innerHTML = '<section class="wrap c-home"><h1 class="c-h1">수업이 닫혔어요</h1><p class="lead">' + esc(e.message) + ' 수업이 끝났거나 오래되어 자동으로 닫혔어요.</p><button class="btn primary" id="again">새 수업 열기</button></section>';
-      document.getElementById("again").onclick = function () { home(); openClass(); };
+      document.getElementById("again").onclick = function () { home(); };
       return;
     }
     toast(e.message);
