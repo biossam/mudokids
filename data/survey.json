@@ -23,6 +23,7 @@
       "id": "agency",
       "name": "주체성",
       "desc": "내 생각과 판단을 스스로 세우고 책임 있게 선택하는 힘",
+      "axis": "center",
       "lessons": [
         1,
         9
@@ -42,6 +43,7 @@
       "id": "social",
       "name": "사회·관계적 사고",
       "desc": "다른 사람의 생각과 감정을 존중하며 좋은 관계를 맺는 힘",
+      "axis": "reflect",
       "lessons": [
         1,
         5
@@ -61,6 +63,7 @@
       "id": "critical",
       "name": "비판적 사고",
       "desc": "정보와 AI의 답을 그대로 믿지 않고 근거를 따져 보는 힘",
+      "axis": "reflect",
       "lessons": [
         2,
         3
@@ -80,6 +83,7 @@
       "id": "problem",
       "name": "문제해결 사고",
       "desc": "필요한 것을 찾아 알맞은 방법으로 실천하며 문제를 푸는 힘",
+      "axis": "fuse",
       "lessons": [
         8
       ],
@@ -98,6 +102,7 @@
       "id": "curiosity",
       "name": "호기심",
       "desc": "궁금한 것을 묻고 스스로 알아보려는 힘",
+      "axis": "center",
       "lessons": [],
       "items": [
         {
@@ -114,6 +119,7 @@
       "id": "insight",
       "name": "직관적 통찰",
       "desc": "표정·분위기 같은 작은 신호에서 상대의 마음과 핵심을 알아차리는 힘",
+      "axis": "fuse",
       "lessons": [
         4,
         8
@@ -133,6 +139,7 @@
       "id": "creative",
       "name": "창의적 사고",
       "desc": "새로운 생각을 떠올리고 더 나은 방법을 설계하는 힘",
+      "axis": "fuse",
       "lessons": [
         5
       ],
@@ -151,6 +158,7 @@
       "id": "ethical",
       "name": "윤리적 사고",
       "desc": "나와 남, 공동체에 미칠 영향을 생각해 옳은 쪽을 고르는 힘",
+      "axis": "reflect",
       "lessons": [
         6,
         9
@@ -170,6 +178,7 @@
       "id": "reflective",
       "name": "성찰적 사고",
       "desc": "내 경험과 배움을 돌아보고 다음을 더 낫게 만드는 힘",
+      "axis": "reflect",
       "lessons": [
         6,
         7,
@@ -190,6 +199,7 @@
       "id": "integrative",
       "name": "통합적 사고",
       "desc": "여러 사람의 생각과 강점을 엮어 더 큰 답을 만드는 힘",
+      "axis": "fuse",
       "lessons": [
         7
       ],
@@ -208,6 +218,7 @@
       "id": "contextual",
       "name": "맥락적 사고",
       "desc": "말과 상황 뒤에 숨은 뜻과 배경을 함께 읽는 힘",
+      "axis": "fuse",
       "lessons": [
         3
       ],
@@ -226,6 +237,7 @@
       "id": "adaptive",
       "name": "적응성",
       "desc": "달라지는 상황에서도 가치를 지키며 알맞게 행동을 바꾸는 힘",
+      "axis": "center",
       "lessons": [
         10
       ],
@@ -250,5 +262,39 @@
       "id": "open",
       "text": "RUNNING MAN 프로젝트를 하며 내가 가장 많이 달라진 점은 무엇인가요? (선택)"
     }
-  }
+  },
+  "axes": [
+    {
+      "id": "center",
+      "name": "중심잡기",
+      "skills": [
+        "주체성",
+        "적응성",
+        "호기심"
+      ]
+    },
+    {
+      "id": "reflect",
+      "name": "성찰하기",
+      "skills": [
+        "비판적 사고",
+        "윤리적 사고",
+        "성찰적 사고",
+        "사회·관계적 사고"
+      ]
+    },
+    {
+      "id": "fuse",
+      "name": "융합하기",
+      "skills": [
+        "창의적 사고",
+        "직관적 통찰",
+        "문제해결 사고",
+        "맥락적 사고",
+        "통합적 사고"
+      ]
+    }
+  ],
+  "axesSource": "김현철(고려대학교 컴퓨터학과 교수), 「인간중심사고 AI : 휴먼스킬」, 네이버커넥트재단 테크런",
+  "axesUrl": "https://techrun.connect.or.kr/online/course/83/lecture/107"
 }

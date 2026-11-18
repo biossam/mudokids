@@ -18,6 +18,7 @@ for n in range(1, 11):
             order.append(s["name"]); by[s["name"]] = []
         by[s["name"]].append((n, s))
 desc = {k["name"]: k.get("desc", "") for k in sv["skills"]}
+axis = {k["name"]: k.get("axis", "") for k in sv["skills"]}
 extra = [k["name"] for k in sv["skills"] if k["name"] not in by]
 
 o = []
@@ -25,26 +26,30 @@ o.append(f'''    <div class="page" data-page="skills" aria-label="휴먼스킬">
     <section id="skills" class="section">
       <div class="wrap">
         <h2 class="section-title">RUNNING MAN이 키우는 휴먼스킬</h2>
-        <p class="lead">AI가 대신하기 어려운 사람의 힘 <b>{len(order)}가지</b>를 10차시 동안 하나씩 키워요.</p>
+        <p class="lead">AI 시대에 사람만이 발휘할 수 있는 <b>인간중심 사고</b>를 휴먼스킬이라고 해요. 휴먼스킬은 세 갈래 12가지이고, RUNNING MAN은 그중 {len(order)}가지를 10차시 동안 키워요.</p>
+        <div class="ax-wrap">
+          <p class="ax-core"><b>휴먼스킬</b><span>인간중심 사고</span></p>
+          <div class="ax-cols">''')
+for ax in sv["axes"]:
+    names = ax.get("skills") or [k["name"] for k in sv["skills"] if k.get("axis") == ax["id"]]
+    o.append(f'            <section class="ax ax-{ax["id"]}"><h3 class="ax-name">{e(ax["name"])}</h3><ul>')
+    for name in names:
+        bs = "".join(f'<a href="lesson.html?l={n}" title="{n}차시 {e(sh[n]["title"])}">{badge(n, "")}</a>' for n, _ in by.get(name, []))
+        o.append(f'              <li><b>{e(name)}</b><p>{e(desc.get(name, ""))}</p><span class="sk-mini">{bs or '<em>사전·사후 설문</em>'}</span></li>')
+    o.append("            </ul></section>")
+o.append(f'''          </div>
+          <p class="small note">휴먼스킬 출처: <a href="{e(sv.get("axesUrl", "#"))}" target="_blank" rel="noopener">{e(sv.get("axesSource", ""))}</a>. 한 줄 풀이는 학생에게 설명하기 쉽게 쓴 초안이고, 배지를 누르면 그 차시로 가요.</p>
+        </div>
 
         <h3 class="sk-h">10차시 휴먼스킬 길</h3>
         <div class="sk-road">''')
 for cls, title, rng in PH:
     o.append(f'          <div class="sk-phase {cls}"><p class="sk-phase-name">{e(title)} <span>{rng.start}~{rng.stop-1}차시</span></p><ol>')
     for n in rng:
-        chips = "".join(f'<span class="sk-tag">{e(s["name"])}</span>' for s in les[n]["skills"])
+        chips = "".join(f'<span class="sk-tag ax-{axis.get(s["name"], "")}">{e(s["name"])}</span>' for s in les[n]["skills"])
         o.append(f'            <li><a href="lesson.html?l={n}">{badge(n, "sk-badge")}<span class="sk-step"><b>{n}차시 · {e(sh[n]["title"])}</b>{chips}</span></a></li>')
     o.append("          </ol></div>")
-o.append('''        </div>
-
-        <h3 class="sk-h">휴먼스킬 한눈에</h3>
-        <ul class="sk-tiles">''')
-for name in order:
-    o.append(f'          <li class="sk-tile"><b>{e(name)}</b><p>{e(desc.get(name, ""))}</p><span class="sk-mini">' +
-             "".join(f'<a href="lesson.html?l={n}" title="{n}차시 {e(sh[n]["title"])}">{badge(n, "")}</a>' for n, _ in by[name]) + "</span></li>")
-o.append('        </ul>')
-o.append('        <p class="small note">한 줄 풀이는 학생에게 설명하기 쉽게 쓴 초안이에요. 배지를 누르면 그 차시로 가요.' +
-         "".join(f" 사전·사후 설문에는 <b>{e(x)}</b>도 들어 있어요." for x in extra) + "</p>")
+o.append('''        </div>''')
 o.append('''
         <h3 class="sk-h">자랐는지 이렇게 확인해요</h3>
         <ol class="sk-flow">

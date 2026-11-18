@@ -111,3 +111,4 @@ assets/js/class.js      수업하기 동작
 - 휴먼스킬 탭(`index.html#skills`)은 `tools/build_skills.py`가 `data/lessons.json`(차시별 알기·하기·가치), `data/sheets.json`(차시 글자·제목), `data/survey.json`(한 줄 풀이 `desc`, 설문 문항)으로 만듭니다. 지도안 휴먼스킬을 고치면 `python3 tools/build_skills.py`를 다시 실행하세요.
 - 한 줄 풀이(`desc`)는 학생에게 설명하기 쉽게 쓴 것으로, 연구회 공식 정의가 정해지면 `data/survey.json`에서 바꿉니다.
 - 체크리스트 탭: AI 도구 쓰기 전 체크리스트 + 수업하기 체크리스트(수업 전·중·후, 휴먼스킬). 체크 표시는 저장되지 않습니다.
+- 휴먼스킬 세 갈래(중심잡기·성찰하기·융합하기)와 12가지 틀의 출처: 김현철(고려대학교 컴퓨터학과 교수), 「인간중심사고 AI : 휴먼스킬」, 네이버커넥트재단 테크런 (https://techrun.connect.or.kr/online/course/83/lecture/107). `data/survey.json`의 `axes`·`axis`에 담겨 있습니다.
