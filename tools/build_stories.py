@@ -21,7 +21,7 @@ o = ['''    <div class="page" data-page="stories" aria-label="수업 이야기">
         <nav class="st-nav" aria-label="수업 이야기 차례"><a href="#st-change">1차 수업에서 바꾼 점</a><a href="#st-result">실제 변화</a><a href="#st-voice">학생 목소리</a><a href="#st-adapt">우리 학교에 맞게</a><a href="#check">따라 하기 체크리스트</a></nav>
 
         <h3 class="sk-h" id="st-change">1차 수업에서 바꾼 점</h3>
-        <p class="small note">따라 하실 선생님을 위한 ‘함정 미리보기’예요. 처음 수업에서 걱정된 점과 최종본에서 바꾼 내용이에요.</p>
+        <p class="small note">따라 하실 선생님을 위한 ‘함정 미리보기’예요.</p>
         <ol class="st-changes">''']
 for c in st["changes"]:
     n = c["no"]
@@ -36,13 +36,12 @@ o.append(f'''        </ol>
           <div><span>휴먼스킬 12가지</span><b>모두 상승</b><em>12개 영역 p&lt;.01</em></div>
           <div><span>응답한 학생</span><b>사전 81 · 사후 83명</b><em>4개 학급</em></div>
         </div>
-        <p class="st-summary">{e(r["summary"])}</p>
         <div class="st-expect">''')
 for x in r["expected"]:
     o.append(f'          <div><b>{e(x["title"])}</b><p>{e(x["text"])}</p></div>')
 o.append('''        </div>
         <div class="st-chart">
-          <p class="st-legend"><span><i class="pre"></i>사전</span><span><i class="post"></i>사후</span><span class="small">5점 만점 · 막대는 3점부터 · 많이 오른 순서</span></p>''')
+          <p class="st-legend"><span><i class="pre"></i>사전</span><span><i class="post"></i>사후</span><span class="small">5점 만점 · 막대는 3점부터 · 많이 오른 순서 · 줄을 누르면 해석</span></p>''')
 for s in r["skills"]:
     d = s["post"] - s["pre"]
     o.append(f'''          <details class="st-row"><summary><span class="st-name ax-{axis.get(s["name"], "")}">{e(s["name"])}</span>
@@ -51,7 +50,6 @@ for s in r["skills"]:
 o.append(f'''          <div class="st-row st-total"><span class="st-name">전체 36문항</span>
             <span class="st-bars"><span class="st-bar pre"><i style="width:{w(t["pre"])}"></i>{t["pre"]:.2f}</span><span class="st-bar post"><i style="width:{w(t["post"])}"></i>{t["post"]:.2f}</span></span>
             <span class="st-d">+{t["post"]-t["pre"]:.2f}</span></div>
-          <p class="small note">이름 색은 휴먼스킬의 세 갈래(중심잡기·성찰하기·융합하기)예요. 줄을 누르면 해석이 나와요.</p>
         </div>
         <div class="st-two">
           <div class="st-box"><h4>반별 보기</h4><ul class="st-classes">''')
@@ -81,7 +79,7 @@ o.append(f'''        </div>
 stories = "\n".join(o)
 
 f = ['        <!-- follow:start -->', '        <h2 class="section-title check-second">따라 하기 체크리스트</h2>',
-     '        <p class="lead">연구회가 실제 수업에서 챙긴 것들이에요. 수업 전 · 차시별 · 수업 후 순서대로 확인해 보세요.</p>', '        <div class="checks follow">']
+     '        <p class="lead">연구회가 실제 수업에서 챙긴 것들이에요.</p>', '        <div class="checks follow">']
 for g in st["follow"]:
     f.append(f'          <h3 class="check-group">{e(g["group"])}</h3>')
     for it in g["items"]:
