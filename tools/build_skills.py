@@ -7,69 +7,71 @@ les = {L["no"]: L for L in json.load(open(R / "data/lessons.json", encoding="utf
 sh = {L["no"]: L for L in json.load(open(R / "data/sheets.json", encoding="utf-8"))["lessons"]}
 sv = json.load(open(R / "data/survey.json", encoding="utf-8"))
 e = html.escape
+PH = [("p1", "나와 AI 이해하기", range(1, 5)), ("p2", "함께 연결하기", range(5, 8)), ("p3", "실천하고 미래 만들기", range(8, 11))]
 phase = lambda n: "p1" if n <= 4 else "p2" if n <= 7 else "p3"
+badge = lambda n, cls: f'<img class="{cls}" src="assets/img/badges/{n}.png" alt="{n}차시 {e(sh[n]["letter"])}" loading="lazy">'
 
-# 휴먼스킬별로 차시 모으기 (지도안 순서)
 order, by = [], {}
 for n in range(1, 11):
     for s in les[n]["skills"]:
         if s["name"] not in by:
             order.append(s["name"]); by[s["name"]] = []
         by[s["name"]].append((n, s))
-items = {k["name"]: k["items"] for k in sv["skills"]}
 desc = {k["name"]: k.get("desc", "") for k in sv["skills"]}
-extra = "".join(f" 사전·사후 설문에는 휴먼스킬 틀에 있는 <b>{e(k['name'])}</b>도 들어 있어요(특정 차시 없이 프로젝트 전체에서 봐요)." for k in sv["skills"] if k["name"] not in by)
+extra = [k["name"] for k in sv["skills"] if k["name"] not in by]
 
-out = []
-out.append('''    <div class="page" data-page="skills" aria-label="휴먼스킬">
+o = []
+o.append(f'''    <div class="page" data-page="skills" aria-label="휴먼스킬">
     <section id="skills" class="section">
       <div class="wrap">
         <h2 class="section-title">RUNNING MAN이 키우는 휴먼스킬</h2>
-        <p class="lead">AI가 대신하기 어려운 사람의 힘 가운데 ''' + str(len(order)) + '''가지를 10차시에 나누어 키워요. 차시마다 휴먼스킬 1~2개를 정해 <b>알기 · 하기 · 가치</b>로 수업을 짜고, 같은 기준으로 평가해요.</p>
-        <div class="sk-map" role="table" aria-label="휴먼스킬과 차시">
-          <div class="sk-row sk-head" role="row"><span role="columnheader">휴먼스킬</span>''' +
-        "".join(f'<a role="columnheader" class="{phase(n)}" href="lesson.html?l={n}" title="{n}차시 {e(sh[n]["title"])}">{e(sh[n]["letter"])}<small>{n}</small></a>' for n in range(1, 11)) + "</div>")
+        <p class="lead">AI가 대신하기 어려운 사람의 힘 <b>{len(order)}가지</b>를 10차시 동안 하나씩 키워요.</p>
+
+        <h3 class="sk-h">10차시 휴먼스킬 길</h3>
+        <div class="sk-road">''')
+for cls, title, rng in PH:
+    o.append(f'          <div class="sk-phase {cls}"><p class="sk-phase-name">{e(title)} <span>{rng.start}~{rng.stop-1}차시</span></p><ol>')
+    for n in rng:
+        chips = "".join(f'<span class="sk-tag">{e(s["name"])}</span>' for s in les[n]["skills"])
+        o.append(f'            <li><a href="lesson.html?l={n}">{badge(n, "sk-badge")}<span class="sk-step"><b>{n}차시 · {e(sh[n]["title"])}</b>{chips}</span></a></li>')
+    o.append("          </ol></div>")
+o.append('''        </div>
+
+        <h3 class="sk-h">휴먼스킬 한눈에</h3>
+        <ul class="sk-tiles">''')
 for name in order:
-    ns = [n for n, _ in by[name]]
-    out.append(f'          <div class="sk-row" role="row"><a role="rowheader" href="#sk-{order.index(name)+1}">{e(name)}</a>' +
-               "".join(f'<span role="cell" class="{phase(n) if n in ns else ""}">{"●" if n in ns else ""}</span>' for n in range(1, 11)) + "</div>")
-out.append('''        </div>
-        <p class="small note">● 그 차시에서 집중해서 키우는 휴먼스킬. 글자를 누르면 차시 화면이 열려요.''' + extra + '''</p>
-        <p class="small note">아래 한 줄 풀이는 학생에게 설명하기 쉽게 쓴 것이고, 카드를 펼치면 차시별 지도안의 알기·하기·가치가 나와요.</p>
-        <div class="sk-cards">''')
-for i, name in enumerate(order, 1):
-    ns = by[name]
-    first = ns[0][1]
-    out.append(f'''          <details class="sk-card" id="sk-{i}">
-            <summary><b>{e(name)}</b><span class="sk-know">{e(desc.get(name) or first["know"])}</span>
-              <span class="sk-chips">''' + "".join(f'<span class="sk-chip {phase(n)}">{n}차시 {e(sh[n]["letter"])}</span>' for n, _ in ns) + '''</span></summary>
-            <div class="sk-body">''')
-    for n, s in ns:
-        out.append(f'''              <div class="sk-lesson"><h4><a href="lesson.html?l={n}">{n}차시 · {e(sh[n]["title"])}</a></h4>
-                <dl><dt>알기</dt><dd>{e(s["know"])}</dd><dt>하기</dt><dd>{e(s["do"])}</dd><dt>가치</dt><dd>{e(s["value"])}</dd></dl></div>''')
-    if name in items:
-        out.append('              <p class="sk-survey"><b>설문 문항</b> ' + " · ".join(f"“{e(it['text'])}”" for it in items[name]) + "</p>")
-    out.append("            </div>\n          </details>")
-out.append('''        </div>
-        <div class="sk-how">
-          <h3>휴먼스킬이 자랐는지 이렇게 봐요</h3>
-          <ul>
-            <li><b>차시마다</b> 실시간 현황의 <b>평가 초안</b>이 활동지 답을 휴먼스킬 기준(상·중·하)으로 정리해요. 선생님이 고쳐서 확정해요.</li>
-            <li><b>프로젝트 앞뒤로</b> 수업하기 화면에서 <b>휴먼스킬 사전·사후 설문</b>을 띄우고, 설문 결과에서 휴먼스킬별 변화를 봐요.</li>
-            <li><b>숫자만 보지 않기</b>: 설문은 학생의 생각이라 관찰·활동지와 함께 해석해요. 차시 화면 → 수업 안내 탭에 평가 기준이 있어요.</li>
-          </ul>
-        </div>
+    o.append(f'          <li class="sk-tile"><b>{e(name)}</b><p>{e(desc.get(name, ""))}</p><span class="sk-mini">' +
+             "".join(f'<a href="lesson.html?l={n}" title="{n}차시 {e(sh[n]["title"])}">{badge(n, "")}</a>' for n, _ in by[name]) + "</span></li>")
+o.append('        </ul>')
+o.append('        <p class="small note">한 줄 풀이는 학생에게 설명하기 쉽게 쓴 초안이에요. 배지를 누르면 그 차시로 가요.' +
+         "".join(f" 사전·사후 설문에는 <b>{e(x)}</b>도 들어 있어요." for x in extra) + "</p>")
+o.append('''
+        <h3 class="sk-h">자랐는지 이렇게 확인해요</h3>
+        <ol class="sk-flow">
+          <li><span class="sk-flow-when">1차시 전</span><b>사전 설문</b><p>수업하기에서 띄우고, 결과 CSV를 받아 둬요.</p></li>
+          <li><span class="sk-flow-when">차시마다</span><b>평가 초안</b><p>실시간 현황이 활동지 답을 상·중·하로 정리해요. 선생님이 확정해요.</p></li>
+          <li><span class="sk-flow-when">10차시 뒤</span><b>사후 설문 · 비교</b><p>사전 CSV를 불러와 휴먼스킬별 변화를 봐요.</p></li>
+        </ol>
+
+        <details class="sk-more">
+          <summary>차시별 알기 · 하기 · 가치 자세히 보기</summary>
+          <div class="table-wrap"><table class="sk-table"><thead><tr><th>차시</th><th>휴먼스킬</th><th>알기</th><th>하기</th><th>가치</th></tr></thead><tbody>''')
+for n in range(1, 11):
+    for i, s in enumerate(les[n]["skills"]):
+        first = f'<td rowspan="{len(les[n]["skills"])}" class="{phase(n)}"><a href="lesson.html?l={n}">{n}차시<br>{e(sh[n]["letter"])}</a></td>' if i == 0 else ""
+        o.append(f'            <tr>{first}<td><b>{e(s["name"])}</b></td><td>{e(s["know"])}</td><td>{e(s["do"])}</td><td>{e(s["value"])}</td></tr>')
+o.append('''          </tbody></table></div>
+        </details>
       </div>
     </section>
     </div>
 ''')
-block = "\n".join(out)
+block = "\n".join(o)
 p = R / "index.html"; s = p.read_text(encoding="utf-8")
-s = re.sub(r'    <div class="page" data-page="skills".*?</section>\n    </div>\n', "", s, flags=re.S)
+s, k = re.subn(r'    <div class="page" data-page="skills".*?</section>\n    </div>\n\n?', "", s, flags=re.S)
 anchor = '    <div class="page" data-page="guide"'
-assert anchor in s
 s = s.replace(anchor, block + "\n" + anchor, 1)
 if 'data-tab="skills"' not in s:
     s = s.replace('<a href="#guide" data-tab="guide">수업 안내</a>', '<a href="#skills" data-tab="skills">휴먼스킬</a>\n        <a href="#guide" data-tab="guide">수업 안내</a>', 1)
 p.write_text(s, encoding="utf-8")
-print("skills:", len(order))
+print("skills:", len(order), "replaced:", k)
