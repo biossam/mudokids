@@ -53,19 +53,38 @@ o.append('''
           <li><span class="sk-flow-when">10차시 뒤</span><b>사후 설문 · 비교</b><p>사전 CSV를 불러와 휴먼스킬별 변화를 봐요.</p></li>
         </ol>
 
-        <details class="sk-more">
-          <summary>차시별 알기 · 하기 · 가치 자세히 보기</summary>
-          <div class="table-wrap"><table class="sk-table"><thead><tr><th>차시</th><th>휴먼스킬</th><th>알기</th><th>하기</th><th>가치</th></tr></thead><tbody>''')
+        <h3 class="sk-h">차시별 알기 → 하기 → 가치</h3>
+        <div class="kdv" data-kdv>
+          <div class="kdv-pick" role="tablist" aria-label="차시 고르기">''')
 for n in range(1, 11):
-    for i, s in enumerate(les[n]["skills"]):
-        first = f'<td rowspan="{len(les[n]["skills"])}" class="{phase(n)}"><a href="lesson.html?l={n}">{n}차시<br>{e(sh[n]["letter"])}</a></td>' if i == 0 else ""
-        o.append(f'            <tr>{first}<td><b>{e(s["name"])}</b></td><td>{e(s["know"])}</td><td>{e(s["do"])}</td><td>{e(s["value"])}</td></tr>')
-o.append('''          </tbody></table></div>
-        </details>
+    o.append(f'            <button type="button" role="tab" class="kdv-btn {phase(n)}" data-kdv-n="{n}" aria-selected="{"true" if n == 1 else "false"}" aria-controls="kdv-{n}">{badge(n, "")}<span>{n}</span></button>')
+o.append("          </div>")
+for n in range(1, 11):
+    o.append(f'          <section class="kdv-panel {phase(n)}" id="kdv-{n}" role="tabpanel"{"" if n == 1 else " hidden"}>')
+    o.append(f'            <p class="kdv-title"><a href="lesson.html?l={n}">{n}차시 · {e(sh[n]["title"])}</a></p>')
+    for s_ in les[n]["skills"]:
+        o.append(f'''            <div class="kdv-row"><p class="kdv-skill">{e(s_["name"])}</p><ol class="kdv-flow">
+              <li class="k"><span>알기</span><p>{e(s_["know"])}</p></li>
+              <li class="d"><span>하기</span><p>{e(s_["do"])}</p></li>
+              <li class="v"><span>가치</span><p>{e(s_["value"])}</p></li>
+            </ol></div>''')
+    o.append("          </section>")
+o.append('''        </div>
+        <script>
+          (function () {
+            var box = document.querySelector("[data-kdv]"); if (!box) return;
+            box.addEventListener("click", function (e) {
+              var b = e.target.closest("[data-kdv-n]"); if (!b) return;
+              box.querySelectorAll("[data-kdv-n]").forEach(function (x) { x.setAttribute("aria-selected", x === b ? "true" : "false"); });
+              box.querySelectorAll(".kdv-panel").forEach(function (p) { p.hidden = p.id !== "kdv-" + b.dataset.kdvN; });
+            });
+          })();
+        </script>
       </div>
     </section>
     </div>
 ''')
+
 block = "\n".join(o)
 p = R / "index.html"; s = p.read_text(encoding="utf-8")
 s, k = re.subn(r'    <div class="page" data-page="skills".*?</section>\n    </div>\n\n?', "", s, flags=re.S)
