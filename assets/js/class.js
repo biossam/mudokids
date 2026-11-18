@@ -209,7 +209,7 @@
   function paintSurvey() {
     var on = chosenSkills(), box = document.getElementById("skills");
     box.innerHTML = SV.skills.map(function (k) { var o = on.indexOf(k.id) >= 0; return '<button type="button" class="chip' + (o ? " on" : "") + '" aria-pressed="' + o + '" data-sk="' + k.id + '">' + esc(k.name) + "</button>"; }).join("") +
-      '<span class="small">' + on.length + "개 · 문항 " + (on.length * 2) + "개</span>";
+      '<span class="small">' + on.length + "개 · 문항 " + SV.skills.filter(function (k) { return on.indexOf(k.id) >= 0; }).reduce(function (n, k) { return n + k.items.length; }, 0) + "개</span>";
     box.onclick = function (e) {
       var b = e.target.closest("[data-sk]"); if (!b) return;
       var cur = chosenSkills(), i = cur.indexOf(b.dataset.sk);

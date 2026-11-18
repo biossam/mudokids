@@ -9,7 +9,7 @@
   var phase = q.get("phase") === "post" ? "post" : "pre";
   var EMBED = q.get("embed") === "1";
   if (EMBED) document.body.classList.add("embed");
-  var ME_KEY = "mdk-me-v1", DEV_KEY = "mdk-dev-v1", KEY = "mdk-survey-v1-" + phase;
+  var ME_KEY = "mdk-me-v1", DEV_KEY = "mdk-dev-v1", KEY = "mdk-survey-v2-" + phase;
   var S, me, ans, items, timer, warned = "";
 
   function read(k, d) { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } }
