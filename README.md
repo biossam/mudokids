@@ -112,3 +112,8 @@ assets/js/class.js      수업하기 동작
 - 한 줄 풀이(`desc`)는 학생에게 설명하기 쉽게 쓴 것으로, 연구회 공식 정의가 정해지면 `data/survey.json`에서 바꿉니다.
 - 체크리스트 탭: AI 도구 쓰기 전 체크리스트 + 수업하기 체크리스트(수업 전·중·후, 휴먼스킬). 체크 표시는 저장되지 않습니다.
 - 휴먼스킬 세 갈래(중심잡기·성찰하기·융합하기)와 12가지 틀의 출처: 김현철(고려대학교 컴퓨터학과 교수), 「인간중심사고 AI : 휴먼스킬」, 네이버커넥트재단 테크런 (https://techrun.connect.or.kr/online/course/83/lecture/107). `data/survey.json`의 `axes`·`axis`에 담겨 있습니다.
+
+## 수업 이야기 탭 · 따라 하기 체크리스트
+
+- `data/stories.json`(연구회 신청서의 1차 수업에서 바꾼 점, 사전·사후 설문 결과, 학생 인터뷰, 따라 하기 체크리스트, 우리 학교에 맞게 바꾸려면) → `python3 tools/build_stories.py`가 수업 이야기 탭과 체크리스트 탭의 '따라 하기 체크리스트'를 만듭니다.
+- 휴먼스킬 탭의 강의 설명(`data/survey.json`의 `coreDef`, `axes[].desc`, `skills[].lecture`)은 김현철 교수 테크런 강의 화면의 문구입니다.

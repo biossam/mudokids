@@ -19,6 +19,7 @@ for n in range(1, 11):
         by[s["name"]].append((n, s))
 desc = {k["name"]: k.get("desc", "") for k in sv["skills"]}
 axis = {k["name"]: k.get("axis", "") for k in sv["skills"]}
+lec = {k["name"]: k.get("lecture", "") for k in sv["skills"]}
 extra = [k["name"] for k in sv["skills"] if k["name"] not in by]
 
 o = []
@@ -26,19 +27,19 @@ o.append(f'''    <div class="page" data-page="skills" aria-label="휴먼스킬">
     <section id="skills" class="section">
       <div class="wrap">
         <h2 class="section-title">RUNNING MAN이 키우는 휴먼스킬</h2>
-        <p class="lead">AI 시대에 사람만이 발휘할 수 있는 <b>인간중심 사고</b>를 휴먼스킬이라고 해요. 휴먼스킬은 세 갈래 12가지이고, RUNNING MAN은 그중 {len(order)}가지를 10차시 동안 키워요.</p>
+        <p class="lead"><b>인간중심 사고</b>는 “{e(sv.get("coreDef", ""))}”이에요. 휴먼스킬은 세 갈래 12가지이고, RUNNING MAN은 그중 {len(order)}가지를 10차시 동안 키워요.</p>
         <div class="ax-wrap">
           <p class="ax-core"><b>휴먼스킬</b><span>인간중심 사고</span></p>
           <div class="ax-cols">''')
 for ax in sv["axes"]:
     names = ax.get("skills") or [k["name"] for k in sv["skills"] if k.get("axis") == ax["id"]]
-    o.append(f'            <section class="ax ax-{ax["id"]}"><h3 class="ax-name">{e(ax["name"])}</h3><ul>')
+    o.append(f'            <section class="ax ax-{ax["id"]}"><h3 class="ax-name">{e(ax["name"])}</h3>' + (f'<p class="ax-desc">{e(ax["desc"])}</p>' if ax.get("desc") else "") + '<ul>')
     for name in names:
         bs = "".join(f'<a href="lesson.html?l={n}" title="{n}차시 {e(sh[n]["title"])}">{badge(n, "")}</a>' for n, _ in by.get(name, []))
-        o.append(f'              <li><b>{e(name)}</b><p>{e(desc.get(name, ""))}</p><span class="sk-mini">{bs or '<em>사전·사후 설문</em>'}</span></li>')
+        o.append(f'              <li><b>{e(name)}</b><p class="ax-lec">{e(lec.get(name, ""))}</p><p>{e(desc.get(name, ""))}</p><span class="sk-mini">{bs or '<em>사전·사후 설문</em>'}</span></li>')
     o.append("            </ul></section>")
 o.append(f'''          </div>
-          <p class="small note">휴먼스킬 출처: <a href="{e(sv.get("axesUrl", "#"))}" target="_blank" rel="noopener">{e(sv.get("axesSource", ""))}</a>. 한 줄 풀이는 학생에게 설명하기 쉽게 쓴 초안이고, 배지를 누르면 그 차시로 가요.</p>
+          <p class="small note">휴먼스킬 출처: <a href="{e(sv.get("axesUrl", "#"))}" target="_blank" rel="noopener">{e(sv.get("axesSource", ""))}</a>. 굵은 글씨 아래 첫 줄은 강의 설명이고(강의가 두 휴먼스킬을 한 문장으로 함께 설명한 것은 같은 문장을 넣었어요), 둘째 줄은 학생에게 설명하기 쉽게 쓴 풀이예요. 배지를 누르면 그 차시로 가요.</p>
         </div>
 
         <h3 class="sk-h">10차시 휴먼스킬 길</h3>
